@@ -1,0 +1,18 @@
+Se utiliza la palabra reservada 'require' como se ve en el ejemplo:
+
+//-- Importar el módulo 'module_name'
+const mod = require('module_name')
+
+Guardo el enlace a los módulos de javascript para tenerlos siempre a mano:
+
+https://nodejs.org/dist/latest-v16.x/docs/api/index.html
+
+Aquí dejo algunos de los más utilizados/importantes:
+
+http: Módulo principal para crear servidores web. Nos permitir inicializar y lanzar el servidor. Contiene las clases http.IncomingMessage y http.ServerResponse para gestionar los mesajes de solicitud y de respuesta del protocolo HTTP -->
+const http = require('http');
+
+fs: Módulo para acceder al sistema de ficheros
+path: Funcionalidad para trabajar con los nombres de los ficheros
+url: Analizar y procesar URLs
+os: Métodos y propiedades relativas al sistema operativo usado

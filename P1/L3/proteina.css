@@ -1,0 +1,65 @@
+/* General */
+body {
+    font-family: 'Indie Flower', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+h1 {
+    font-size: 3rem;
+    color: #333;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #666;
+}
+
+.contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.producto {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.producto:hover {
+    transform: scale(1.05);
+}
+
+/* Ajustar las imágenes de los productos */
+.producto img {
+    width: 100%;            /* Las imágenes ocuparán el 100% del ancho del contenedor */
+    max-width: 300px;       /* Limita el ancho máximo a 300px */
+    height: auto;           /* Mantiene la proporción original de la imagen */
+    border-radius: 8px;     /* Bordes redondeados para las imágenes */
+    object-fit: cover;      /* Asegura que la imagen cubra el área sin distorsión */
+}
+
+/* El texto de los productos */
+.producto p {
+    font-size: 1.2rem;
+    color: #333;
+    margin-top: 10px;
+}
+
+.producto p:nth-of-type(2) {
+    color: #ff5e5b;
+    font-weight: bold;
+}

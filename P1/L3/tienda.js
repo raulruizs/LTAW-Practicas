@@ -1,7 +1,6 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const URL = require('url');
 const PORT = 8001;
 
 // Página de error personalizada
@@ -13,7 +12,7 @@ function leerArchivo(filePath, contentType, res) {
         if (err) {
             console.log(`Error al leer el archivo: ${filePath}`); // Añadido para debug
             res.writeHead(404, { 'Content-Type': 'text/html' });
-            res.end(pag_error);
+            res.end(pag_error);  // Mostrar error directamente en el cuerpo de la respuesta
         } else {
             res.writeHead(200, { 'Content-Type': contentType });
             res.end(content, 'utf-8');
@@ -23,7 +22,7 @@ function leerArchivo(filePath, contentType, res) {
 
 // Crear el servidor
 const server = http.createServer((req, res) => {
-    // Analizar la URL solicitada
+    // Analizar la URL solicitada (ya no es necesario require('url'))
     const url = new URL(req.url, `http://${req.headers.host}`);
     let filePath = '.' + url.pathname;
 
@@ -51,7 +50,7 @@ const server = http.createServer((req, res) => {
     } else {
         // Si el archivo solicitado no tiene una extensión válida
         res.writeHead(404, { 'Content-Type': 'text/html' });
-        res.end(pag_error);
+        res.end(pag_error);  // Mostrar error directamente en el cuerpo de la respuesta
     }
 });
 

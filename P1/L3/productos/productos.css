@@ -1,6 +1,6 @@
 /* General */
 body {
-    font-family: 'Poppins'; /* Fuente más moderna */
+    font-family: 'Poppins', sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
@@ -18,66 +18,51 @@ h2 {
     color: #444;
 }
 
-/* Contenedor principal */
+/* Contenedor */
 .contenedor {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Grid de productos */
+/* Productos */
 .productos {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); /* Productos más grandes */
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
     padding: 20px;
 }
 
-/* Estilo de cada producto */
+/* Producto */
 .producto {
     background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
     text-align: center;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .producto:hover {
-    transform: scale(1.07);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Imágenes de productos más grandes y mejor ajustadas */
 .producto img {
     width: 100%;
-    max-width: 350px; /* Tamaño más grande */
-    height: 280px;
-    border-radius: 12px;
+    height: 250px;
     object-fit: cover;
-    transition: transform 0.3s ease-in-out;
+    border-radius: 8px;
 }
 
-.producto:hover img {
-    transform: scale(1.05);
-}
-
-/* Texto de los productos */
+/* Texto */
 .producto p {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     color: #222;
-    font-weight: 500;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 .producto p:nth-of-type(2) {
     color: #ff5e5b;
-    font-size: 1.5rem;
     font-weight: bold;
-}
-
-/* Efecto al hacer clic en el producto */
-.producto:active {
-    transform: scale(0.95);
 }

@@ -11,6 +11,7 @@ const pag_error = fs.readFileSync('./404.html');
 function leerArchivo(filePath, contentType, res) {
     fs.readFile(filePath, (err, content) => {
         if (err) {
+            console.log(`Error al leer el archivo: ${filePath}`); // Añadido para debug
             res.writeHead(404, { 'Content-Type': 'text/html' });
             res.end(pag_error);
         } else {
@@ -23,7 +24,7 @@ function leerArchivo(filePath, contentType, res) {
 // Crear el servidor
 const server = http.createServer((req, res) => {
     // Analizar la URL solicitada
-    const url = new URL.URL(req.url, `http://${req.headers.host}`);
+    const url = new URL(req.url, `http://${req.headers.host}`);
     let filePath = '.' + url.pathname;
 
     // Si la ruta es la raíz, cargamos el archivo index.html

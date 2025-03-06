@@ -36,7 +36,9 @@ ul {
     gap: 20px;
     padding: 20px;
 }
-
+.producto:hover {
+    transform: scale(1.05);
+}
 /* Producto */
 .producto {
     background-color: white;
@@ -57,4 +59,29 @@ ul {
 .producto p {
     color: #222;
     margin-top: 10px;
+}
+/* Para pantallas medianas (tabletas, pantallas de 600px a 900px) */
+@media screen and (max-width: 900px) {
+    h1 {
+        font-size: 2.2rem; /* Ajusta el tamaño de los títulos */
+    }
+    .productos {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta el número de columnas */
+    }
+    .producto {
+        padding: 18px; /* Ajusta el padding de los productos */
+    }
+    .producto img {
+        width: 90%; /* Reduce el tamaño de las imágenes */
+    }
+}
+
+/* Para pantallas grandes (desktops) */
+@media screen and (min-width: 1200px) {
+    h1 {
+        font-size: 3rem; /* Título más grande */
+    }
+    .producto {
+        padding: 25px; /* Aumenta el padding de los productos */
+    }
 }

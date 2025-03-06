@@ -10,6 +10,7 @@ body {
 
 h1 {
     color: whitesmoke;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
 h2 {
@@ -33,10 +34,10 @@ h2 {
 .producto {
     background-color: orange;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: center;
     transition: transform 0.3s ease-in-out;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .producto:hover {
@@ -49,11 +50,9 @@ h2 {
 }
 
 .producto p {
-    color: #333;
+    color:darkslategray;
     margin-top: 10px;
-}
-
-.producto p:nth-of-type(2) {
-    color: #ff5e5b;
-    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: medium;
+    
 }

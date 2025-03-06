@@ -1,18 +1,36 @@
-// Práctica 1 - Crear una aplicación web que sea una tienda on-line. 
-// Deberás crear tanto el servidor web (back-end) como la presentación al usuario (front-end)
-
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const URL = require('url');
 const PORT = 8001;
 
-//-- Crear el servidor
+// Página de error personalizada
+const pag_error = fs.readFileSync('./404.html');
+
+// Función para leer archivos y devolver la respuesta
+function leerArchivo(filePath, contentType, res) {
+    fs.readFile(filePath, (err, content) => {
+        if (err) {
+            res.writeHead(404, { 'Content-Type': 'text/html' });
+            res.end(pag_error);
+        } else {
+            res.writeHead(200, { 'Content-Type': contentType });
+            res.end(content, 'utf-8');
+        }
+    });
+}
+
+// Crear el servidor
 const server = http.createServer((req, res) => {
-    let filePath = '.' + req.url;
+    // Analizar la URL solicitada
+    const url = new URL.URL(req.url, `http://${req.headers.host}`);
+    let filePath = '.' + url.pathname;
+
+    // Si la ruta es la raíz, cargamos el archivo index.html
     if (filePath === './') {
-        filePath = '.index.html';
+        filePath = './index.html';
     }
-    
+
     const extname = path.extname(filePath).toLowerCase();
     const contentType = {
         '.html': 'text/html',
@@ -23,25 +41,20 @@ const server = http.createServer((req, res) => {
         '.png': 'image/png',
         '.gif': 'image/gif'
     }[extname] || 'application/octet-stream';
-    
-    fs.readFile(filePath, (err, content) => {
-        if (err) {
-            if (err.code === 'ENOENT') {
-                fs.readFile('./404.html', (err, errorContent) => {
-                    res.writeHead(404, { 'Content-Type': 'text/html' });
-                    res.end(errorContent || 'Error 404 - Página no encontrada', 'utf-8');
-                });
-            } else {
-                res.writeHead(500);
-                res.end(`Error interno del servidor: ${err.code}`);
-            }
-        } else {
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.end(content, 'utf-8');
-        }
-    });
+
+    // Manejo de diferentes tipos de archivos
+    if (extname === '.css') {
+        leerArchivo(filePath, 'text/css', res);
+    } else if (extname === '.html' || extname === '.js' || extname === '.jpg' || extname === '.jpeg' || extname === '.png' || extname === '.gif') {
+        leerArchivo(filePath, contentType, res);
+    } else {
+        // Si el archivo solicitado no tiene una extensión válida
+        res.writeHead(404, { 'Content-Type': 'text/html' });
+        res.end(pag_error);
+    }
 });
-    
+
+// Escuchar en el puerto definido
 server.listen(PORT, () => {
     console.log(`Servidor funcionando en http://localhost:${PORT}`);
 });

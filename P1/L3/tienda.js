@@ -39,7 +39,8 @@ const server = http.createServer((req, res) => {
         '.jpg': 'image/jpeg',
         '.jpeg': 'image/jpeg',
         '.png': 'image/png',
-        '.gif': 'image/gif'
+        '.gif': 'image/gif',
+        '.webp': 'image/webp'
     }[extname] || 'application/octet-stream';
 
     // Manejo de diferentes tipos de archivos

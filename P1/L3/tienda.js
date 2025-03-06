@@ -40,13 +40,13 @@ const server = http.createServer((req, res) => {
         '.jpeg': 'image/jpeg',
         '.png': 'image/png',
         '.gif': 'image/gif',
-        '.webp': 'image/webp'
+        '.webp': 'imagenes/webp'
     }[extname] || 'application/octet-stream';
 
     // Manejo de diferentes tipos de archivos
     if (extname === '.css') {
         leerArchivo(filePath, 'text/css', res);
-    } else if (extname === '.html' || extname === '.js' || extname === '.jpg' || extname === '.jpeg' || extname === '.png' || extname === '.gif') {
+    } else if (extname === '.html' || extname === '.js' || extname === '.jpg' || extname === '.jpeg' || extname === '.png' || extname === '.gif' || extname === '.webp') {
         leerArchivo(filePath, contentType, res);
     } else {
         // Si el archivo solicitado no tiene una extensión válida

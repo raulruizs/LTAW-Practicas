@@ -57,5 +57,5 @@ const server = http.createServer((req, res) => {
 
 // Escuchar en el puerto definido
 server.listen(PORT, () => {
-    console.log(`Servidor funcionando en http://localhost:${PORT}`);
+    console.log(`Servidor funcionando en ${PORT}`);
 });

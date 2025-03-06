@@ -1,7 +1,7 @@
 /* General */
 body {
     font-family: 'Poppins'; /* Fuente más moderna */
-    background-color: #f4f4f4;
+    background-color: #b36969;
     margin: 0;
     padding: 0;
     text-align: center;
@@ -51,10 +51,10 @@ h2 {
 
 /* Imágenes de productos más grandes y mejor ajustadas */
 .producto img {
-    width: 100%;
-    max-width: 350px; /* Tamaño más grande */
-    height: 280px;
-    border-radius: 12px;
+    width: 80%;
+    max-width: 250px; /* Tamaño más grande */
+    height: 200px;
+    border-radius: 10px;
     object-fit: cover;
     transition: transform 0.3s ease-in-out;
 }

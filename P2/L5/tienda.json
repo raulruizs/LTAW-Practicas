@@ -2,13 +2,18 @@
     "usuarios": [
       {
         "nombre": "root",
-        "nombre_real": "Raúl",
-        "correo": "raul@nodelift.es"
+        "nombre_real": "Raúl Ruiz",
+        "correo": "raulruiz@nodelift.es"
       },
       {
         "nombre": "fergus33",
         "nombre_real": "Juan López",
         "correo": "fergus_33@gmail.com"
+      },
+      {
+        "nombre": "mauroarambarri",
+        "nombre_real": "Mauro Wilney Arambarri",
+        "correo": "mauro_uruguasho8@gmail.com"
       }
     ],
     "productos": [
@@ -37,12 +42,18 @@
         "direccion": "Calle José Bordalás ,1",
         "tarjeta": "5789-1235-0688-3452",
         "productos": ["Creatina Monohidrato Kojak"]
-      }
+      },
       {
         "usuario": "davidgoggins",
         "direccion": "Calle Cant hurt me, 9",
         "tarjeta": "5672-0021-3478-9001",
         "productos": ["Proteína Whey Cacaolat"]
+      },
+      {
+        "usuario": "fergus33",
+        "direccion": "Calle Sevilla, 16",
+        "tarjeta": "8890-4510-3434-0001",
+        "productos": ["Alimentación Saludable"]
       }
     ]
   }

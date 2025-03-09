@@ -1,0 +1,58 @@
+/* General */
+body {
+    font-family: 'Indie Flower', sans-serif;
+    background: url('/productos/fondo3.webp') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+h1 {
+    color: whitesmoke;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+h2 {
+    color: whitesmoke;
+}
+
+.contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    
+}
+
+.productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.producto {
+    background-color: orange;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.producto:hover {
+    transform: scale(1.05);
+}
+
+.producto img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.producto p {
+    color:darkslategray;
+    margin-top: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: medium;
+    
+}

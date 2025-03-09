@@ -1,0 +1,49 @@
+{
+    "usuarios": [
+      {
+        "nombre": "root",
+        "nombre_real": "Raúl",
+        "correo": "raul@nodelift.es"
+      },
+      {
+        "nombre": "fergus33",
+        "nombre_real": "Juan López",
+        "correo": "fergus_33@gmail.com"
+      }
+    ],
+    "productos": [
+      {
+        "nombre": "Proteína Whey Cacaolat",
+        "descripcion": "Proteína whey de alta calidad con sabor a Cacaolat.",
+        "precio": 30.00,
+        "stock": 100
+      },
+      {
+        "nombre": "Creatina Monohidrato Kojak",
+        "descripcion": "Creatina con sabor a chupa-chups de Kojak, ideal para mejorar el rendimiento deportivo.",
+        "precio": 25.00,
+        "stock": 100
+      },
+      {
+        "nombre": "Alimentación Saludable",
+        "descripcion": "Nuestra tarta de queso proteica versión saludable.",
+        "precio": 7.50,
+        "stock": 10
+      }
+    ],
+    "pedidos": [
+      {
+        "usuario": "mauroarambarri8",
+        "direccion": "Calle José Bordalás ,1",
+        "tarjeta": "5789-1235-0688-3452",
+        "productos": ["Creatina Monohidrato Kojak"]
+      }
+      {
+        "usuario": "davidgoggins",
+        "direccion": "Calle Cant hurt me, 9",
+        "tarjeta": "5672-0021-3478-9001",
+        "productos": ["Proteína Whey Cacaolat"]
+      }
+    ]
+  }
+  

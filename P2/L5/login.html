@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="css/login-style.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Iniciar sesión</h1>
+        <form id="loginForm">
+            <label for="username">Nombre de usuario:</label>
+            <input type="text" id="username" name="username" required>
+            <button type="submit">Iniciar sesión</button>
+            <a href="index.html" class="volver-tienda">Volver a la tienda</a>
+        </form>
+        <p id="errorMensaje" style="color: red; display: none;"></p>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+
+            fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `username=${username}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                    window.location.href = 'index.html';
+                } else {
+                    document.getElementById('errorMensaje').textContent = data.error;
+                    document.getElementById('errorMensaje').style.display = 'block';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

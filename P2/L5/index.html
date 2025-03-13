@@ -11,7 +11,8 @@
         <h1>💪NodeLift💪</h1>
         <h2>--Tienda de Suplementación Deportiva--</h2>
     </header>
-    
+    <p id="usuarioInfo"></p>
+
     <div class="productos"> 
         <div class="producto">
             <a href="productos/proteina.html">
@@ -37,5 +38,13 @@
             <p>Descubre nuestras opciones fitness 🍰🧀</p>
         </div>
     </div>
+    
+    <script>
+        const usuario = localStorage.getItem('usuario');
+        if (usuario) {
+            const usuarioData = JSON.parse(usuario);
+            document.getElementById('usuarioInfo').textContent = `Conectado como: ${usuarioData.nombre}`;
+        }
+    </script>
 </body>
 </html>

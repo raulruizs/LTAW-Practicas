@@ -1,6 +1,8 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const url = require('url');
+const querystring = require('querystring');
 
 const PORT = 8001;
 const DATA_FILE = './tienda.json';
@@ -38,9 +40,35 @@ function leerArchivo(filePath, contentType, res) {
 
 // Crear servidor
 const server = http.createServer((req, res) => {
-    const url = new URL(req.url, `http://${req.headers.host}`);
+    const parsedUrl = url.parse(req.url);
 
-    if (url.pathname === '/usuarios') {
+    if (req.method === 'POST' && parsedUrl.pathname === '/login') {
+        let body = '';
+
+        req.on('data', chunk => { body += chunk; });
+
+        req.on('end', () => {
+            const params = querystring.parse(body);
+            const username = params.username;
+
+            leerBaseDatos((data) => {
+                if (data) {
+                    const usuario = data.usuarios.find(u => u.nombre === username);
+                    if (usuario) {
+                        res.writeHead(200, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ success: true, usuario }));
+                    } else {
+                        res.writeHead(401, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ success: false, error: 'Usuario no encontrado' }));
+                    }
+                } else {
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: 'Error en la base de datos' }));
+                }
+            });
+        });
+
+    } else if (parsedUrl.pathname === '/usuarios') {
         leerBaseDatos((data) => {
             if (data) {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -50,7 +78,7 @@ const server = http.createServer((req, res) => {
                 res.end(JSON.stringify({ error: 'Error al leer la base de datos' }));
             }
         });
-    } else if (url.pathname === '/productos') {
+    } else if (parsedUrl.pathname === '/productos') {
         leerBaseDatos((data) => {
             if (data) {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -60,7 +88,7 @@ const server = http.createServer((req, res) => {
                 res.end(JSON.stringify({ error: 'Error al leer la base de datos' }));
             }
         });
-    } else if (url.pathname === '/pedidos') {
+    } else if (parsedUrl.pathname === '/pedidos') {
         leerBaseDatos((data) => {
             if (data) {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -72,7 +100,7 @@ const server = http.createServer((req, res) => {
         });
     } else {
         // Manejo de archivos estáticos
-        let filePath = '.' + url.pathname;
+        let filePath = '.' + parsedUrl.pathname;
         if (filePath === './') {
             filePath = './index.html';
         }

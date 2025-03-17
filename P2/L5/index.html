@@ -49,6 +49,15 @@
             const usuarioData = JSON.parse(usuario);
             document.getElementById('usuarioInfo').textContent = `Conectado como: ${usuarioData.nombre}`;
         }
+        function añadir_al_carrito(nombre, precio) {
+        let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+        carrito.push({ nombre, precio });
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+
+        alert("Producto añadido al carrito 🛒");
+    }
     </script>
+
 </body>
 </html>

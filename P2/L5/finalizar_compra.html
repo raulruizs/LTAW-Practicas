@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Compra</title>
+    <link rel="stylesheet" href="css/finalizar.css">
+</head>
+<body>
+    <header>
+        <h1>✅ Finalizar Compra</h1> 
+    </header>
+
+    <div id="carritoResumen"></div>
+
+    <form id="formCompra">
+        <label for="direccion">Dirección de envío:</label>
+        <input type="text" id="direccion" required>
+
+        <label for="tarjeta">Número de tarjeta:</label>
+        <input type="text" id="tarjeta" required>
+
+        <button type="submit">Confirmar Pedido</button>
+    </form>
+
+    <p id="mensaje"></p>
+
+    <script>
+        function mostrarResumenCarrito() {
+            let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            let carritoDiv = document.getElementById("carritoResumen");
+
+            if (carrito.length === 0) {
+                carritoDiv.innerHTML = "<p>El carrito está vacío.</p>";
+                document.getElementById("formCompra").style.display = "none";
+                return;
+            }
+
+            carritoDiv.innerHTML = carrito.map(producto => 
+                `<p>${producto.nombre} - ${producto.precio} €</p>`
+            ).join("");
+
+            let total = carrito.reduce((sum, producto) => sum + producto.precio, 0);
+            carritoDiv.innerHTML += `<h3>Total a pagar: ${total} €</h3>`;
+        }
+
+        document.getElementById("formCompra").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let usuario = JSON.parse(localStorage.getItem("usuario"));
+            if (!usuario) {
+                document.getElementById("mensaje").textContent = "⚠️ Debes iniciar sesión para comprar.";
+                return;
+            }
+
+            let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            let direccion = document.getElementById("direccion").value;
+            let tarjeta = document.getElementById("tarjeta").value;
+
+            fetch("http://localhost:8001/finalizar-compra", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    usuario: usuario.nombre,
+                    direccion: direccion,
+                    tarjeta: tarjeta,
+                    productos: carrito.map(p => p.nombre)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("mensaje").textContent = data.mensaje;
+                localStorage.removeItem("carrito");
+            })
+            .catch(error => console.error("Error:", error));
+        });
+
+        mostrarResumenCarrito();
+    </script>
+</body>
+</html>

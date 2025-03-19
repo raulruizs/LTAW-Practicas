@@ -28,15 +28,12 @@
             fetch('http://localhost:8001/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username }) // 🔹 Enviamos JSON correctamente
+                body: JSON.stringify({ username }) 
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Guardar usuario en localStorage
-                    localStorage.setItem('usuario', JSON.stringify(data.usuario));
-    
-                    // Ocultar formulario y mostrar mensaje de éxito
+                    localStorage.setItem('usuario', JSON.stringify(data.usuario)); // ✅ Guarda el usuario
                     document.getElementById('loginForm').style.display = 'none';
                     document.getElementById('mensajeExito').textContent = `✅ Bienvenido, ${data.usuario.nombre_real}!`;
                     document.getElementById('mensajeExito').style.display = 'block';
@@ -52,18 +49,8 @@
             })
             .catch(error => console.error('Error:', error));
         });
-    
-        // Verificar si ya hay un usuario logueado
-        window.onload = function() {
-            const usuario = localStorage.getItem('usuario');
-            if (usuario) {
-                document.getElementById('loginForm').style.display = 'none';
-                const usuarioData = JSON.parse(usuario);
-                document.getElementById('mensajeExito').textContent = `✅ Ya has iniciado sesión como ${usuarioData.nombre_real}`;
-                document.getElementById('mensajeExito').style.display = 'block';
-            }
-        };
     </script>
+    
     
     
 </body>

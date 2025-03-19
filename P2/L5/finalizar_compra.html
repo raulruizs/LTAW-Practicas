@@ -26,42 +26,26 @@
     <p id="mensaje"></p>
 
     <script>
-        function mostrarResumenCarrito() {
-            let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-            let carritoDiv = document.getElementById("carritoResumen");
-
-            if (carrito.length === 0) {
-                carritoDiv.innerHTML = "<p>El carrito está vacío.</p>";
-                document.getElementById("formCompra").style.display = "none";
-                return;
-            }
-
-            carritoDiv.innerHTML = carrito.map(producto => 
-                `<p>${producto.nombre} - ${producto.precio} €</p>`
-            ).join("");
-
-            let total = carrito.reduce((sum, producto) => sum + producto.precio, 0);
-            carritoDiv.innerHTML += `<h3>Total a pagar: ${total} €</h3>`;
-        }
-
         document.getElementById("formCompra").addEventListener("submit", function(event) {
             event.preventDefault();
-
-            let usuario = JSON.parse(localStorage.getItem("usuario"));
-            if (!usuario) {
+    
+            let usuario = localStorage.getItem("usuario"); 
+    
+            if (!usuario) { 
                 document.getElementById("mensaje").textContent = "⚠️ Debes iniciar sesión para comprar.";
                 return;
             }
-
+    
+            let usuarioData = JSON.parse(usuario); // 🔹 Convertir JSON a objeto
             let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
             let direccion = document.getElementById("direccion").value;
             let tarjeta = document.getElementById("tarjeta").value;
-
-            fetch("http://localhost:8001/finalizar_compra", {
+    
+            fetch("http://localhost:8001/finalizar-compra", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    usuario: usuario.nombre,
+                    usuario: usuarioData.nombre, // 🔹 Ahora accede bien al usuario
                     direccion: direccion,
                     tarjeta: tarjeta,
                     productos: carrito.map(p => p.nombre)
@@ -74,8 +58,7 @@
             })
             .catch(error => console.error("Error:", error));
         });
-
-        mostrarResumenCarrito();
     </script>
+    
 </body>
 </html>

@@ -67,7 +67,40 @@ const server = http.createServer((req, res) => {
                 }
             });
         });
-
+        
+    } else if (req.method === "POST" && parsedUrl.pathname === "/finalizar-compra") {
+        let body = "";
+        
+        req.on("data", chunk => { body += chunk; });
+    
+        req.on("end", () => {
+            let datosPedido = JSON.parse(body);
+    
+            leerBaseDatos((data) => {
+                if (data) {
+                    data.pedidos.push({
+                        usuario: datosPedido.usuario,
+                        direccion: datosPedido.direccion,
+                        tarjeta: datosPedido.tarjeta,
+                        productos: datosPedido.productos
+                    });
+    
+                    fs.writeFile(DATA_FILE, JSON.stringify(data, null, 4), (err) => {
+                        if (err) {
+                            res.writeHead(500, { "Content-Type": "application/json" });
+                            res.end(JSON.stringify({ mensaje: "Error al guardar el pedido" }));
+                        } else {
+                            res.writeHead(200, { "Content-Type": "application/json" });
+                            res.end(JSON.stringify({ mensaje: "✅ Pedido realizado con éxito." }));
+                        }
+                    });
+                } else {
+                    res.writeHead(500, { "Content-Type": "application/json" });
+                    res.end(JSON.stringify({ mensaje: "Error al acceder a la base de datos" }));
+                }
+            });
+        });
+    
     } else if (parsedUrl.pathname === '/usuarios') {
         leerBaseDatos((data) => {
             if (data) {

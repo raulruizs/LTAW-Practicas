@@ -22,17 +22,17 @@
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
-
+    
             fetch('http://localhost:8001/login', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `username=${username}`
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username }) // 🔹 CORREGIDO: Se envía correctamente
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    localStorage.setItem('usuario', JSON.stringify(data.usuario));
-                    window.location.href = 'index.html';
+                    localStorage.setItem('usuario', JSON.stringify(data.usuario)); // 🔹 Guarda correctamente en `localStorage`
+                    window.location.href = 'index.html'; // Redirige a la tienda
                 } else {
                     document.getElementById('errorMensaje').textContent = data.error;
                     document.getElementById('errorMensaje').style.display = 'block';
@@ -41,5 +41,6 @@
             .catch(error => console.error('Error:', error));
         });
     </script>
+    
 </body>
 </html>

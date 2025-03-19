@@ -57,7 +57,7 @@
             let direccion = document.getElementById("direccion").value;
             let tarjeta = document.getElementById("tarjeta").value;
 
-            fetch("http://localhost:8001/finalizar-compra", {
+            fetch("http://localhost:8001/finalizar_compra", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

@@ -31,7 +31,7 @@
                 body: JSON.stringify({ username }) 
             })
             .then(response => response.json())
-            .then(data => {
+            .then(data => { 
                 if (data.success) {
                     localStorage.setItem('usuario', JSON.stringify(data.usuario)); // ✅ Guarda el usuario
                     document.getElementById('loginForm').style.display = 'none';

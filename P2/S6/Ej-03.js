@@ -1,3 +1,13 @@
+const http = require('http');
+const fs = require('fs');
+const PUERTO = 8080;
+
+//-- Cargar pagina web del formulario
+const FORMULARIO = fs.readFileSync('form1.html','utf-8');
+
+//-- HTML de la página de respuesta
+const RESPUESTA = fs.readFileSync('form1-resp2.html', 'utf-8');
+
 const server = http.createServer((req, res) => {
 
     //-- Construir el objeto url con la url de la solicitud
@@ -24,8 +34,8 @@ const server = http.createServer((req, res) => {
   
         //-- si el usuario es Chuck Norris se añade HTML extra
         let html_extra = "";
-        if (nombre=="Chuck" && apellidos=="Norris") {
-           html_extra = "<h2>Chuck Norris no necesita registrarse</h2>";
+        if (nombre=="Raul" && apellidos=="Ruiz") {
+           html_extra = "<h2>Raul Ruiz no necesita registrarse</h2>";
         }
         content = content.replace("HTML_EXTRA", html_extra);
     }

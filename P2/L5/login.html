@@ -9,11 +9,49 @@
 <body>
     <div class="login-container">
         <h1>Iniciar sesión</h1>
+        <form id="loginForm">
+            <label for="username">Nombre de usuario:</label>
+            <input type="text" id="username" name="username" required>
+            <button type="submit">Iniciar sesión</button>
+            <a href="index.html" class="volver-tienda">Volver a la tienda</a>
+        </form>
+        <p id="errorMensaje" style="color: red; display: none;"></p>
+        <p id="mensajeExito" style="color: green; display: none;"></p>
 
-        <!-- Aquí va el contenido que el servidor sustituye -->
-        HTML_MENSAJE
-
-        <a href="index.html" class="volver-tienda">Volver a la tienda</a>
     </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+    
+            fetch('http://localhost:8001/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username }) 
+            })
+            .then(response => response.json())
+            .then(data => { 
+                if (data.success) {
+                    localStorage.setItem('usuario', JSON.stringify(data.usuario)); // ✅ Guarda el usuario
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.getElementById('mensajeExito').textContent = `✅ Bienvenido, ${data.usuario.nombre_real}!`;
+                    document.getElementById('mensajeExito').style.display = 'block';
+    
+                    // Redirigir a la tienda después de 2 segundos
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    document.getElementById('errorMensaje').textContent = data.error;
+                    document.getElementById('errorMensaje').style.display = 'block';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+    
+    
+    
 </body>
 </html>

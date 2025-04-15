@@ -1,60 +1,83 @@
 {
     "usuarios": [
-      {
-        "nombre": "root",
-        "nombre_real": "Raúl Ruiz",
-        "correo": "raulruiz@nodelift.es"
-      },
-      {
-        "nombre": "fergus33",
-        "nombre_real": "Juan López",
-        "correo": "fergus_33@gmail.com"
-      },
-      {
-        "nombre": "mauroarambarri8",
-        "nombre_real": "Mauro Wilney Arambarri",
-        "correo": "mauro_uruguasho8@gmail.com"
-      }
+        {
+            "nombre": "root",
+            "nombre_real": "Raúl Ruiz",
+            "correo": "raulruiz@nodelift.es"
+        },
+        {
+            "nombre": "fergus33",
+            "nombre_real": "Juan López",
+            "correo": "fergus_33@gmail.com"
+        },
+        {
+            "nombre": "mauroarambarri8",
+            "nombre_real": "Mauro Wilney Arambarri",
+            "correo": "mauro_uruguasho8@gmail.com"
+        }
     ],
     "productos": [
-      {
-        "nombre": "Proteína Whey Cacaolat",
-        "descripcion": "Proteína whey de alta calidad con sabor a Cacaolat.",
-        "precio": 30.00,
-        "stock": 100
-      },
-      {
-        "nombre": "Creatina Monohidrato Kojak",
-        "descripcion": "Creatina con sabor a chupa-chups de Kojak, ideal para mejorar el rendimiento deportivo.",
-        "precio": 25.00,
-        "stock": 100
-      },
-      {
-        "nombre": "Alimentación Saludable",
-        "descripcion": "Nuestra tarta de queso proteica versión saludable.",
-        "precio": 7.50,
-        "stock": 10
-      }
+        {
+            "nombre": "Proteína Whey Cacaolat",
+            "descripcion": "Proteína whey de alta calidad con sabor a Cacaolat.",
+            "precio": 30,
+            "stock": 100
+        },
+        {
+            "nombre": "Creatina Monohidrato Kojak",
+            "descripcion": "Creatina con sabor a chupa-chups de Kojak, ideal para mejorar el rendimiento deportivo.",
+            "precio": 25,
+            "stock": 100
+        },
+        {
+            "nombre": "Alimentación Saludable",
+            "descripcion": "Nuestra tarta de queso proteica versión saludable.",
+            "precio": 7.5,
+            "stock": 10
+        }
     ],
     "pedidos": [
-      {
-        "usuario": "mauroarambarri8",
-        "direccion": "Calle José Bordalás ,1",
-        "tarjeta": "5789-1235-0688-3452",
-        "productos": ["Creatina Monohidrato Kojak"]
-      },
-      {
-        "usuario": "davidgoggins",
-        "direccion": "Calle Cant hurt me, 9",
-        "tarjeta": "5672-0021-3478-9001",
-        "productos": ["Proteína Whey Cacaolat"]
-      },
-      {
-        "usuario": "fergus33",
-        "direccion": "Calle Sevilla, 16",
-        "tarjeta": "8890-4510-3434-0001",
-        "productos": ["Alimentación Saludable"]
-      }
+        {
+            "usuario": "mauroarambarri8",
+            "direccion": "Calle José Bordalás ,1",
+            "tarjeta": "5789-1235-0688-3452",
+            "productos": [
+                "Creatina Monohidrato Kojak"
+            ]
+        },
+        {
+            "usuario": "davidgoggins",
+            "direccion": "Calle Cant hurt me, 9",
+            "tarjeta": "5672-0021-3478-9001",
+            "productos": [
+                "Proteína Whey Cacaolat"
+            ]
+        },
+        {
+            "usuario": "fergus33",
+            "direccion": "Calle Sevilla, 16",
+            "tarjeta": "8890-4510-3434-0001",
+            "productos": [
+                "Alimentación Saludable"
+            ]
+        },
+        {
+            "usuario": "mauroarambarri8",
+            "direccion": "Calle José Bordalás ,1",
+            "tarjeta": "5789-1235-0688-3452",
+            "productos": [
+                "Proteína Whey Cacaolat",
+                "Creatina monohidrato Kojak"
+            ]
+        },
+        {
+            "usuario": "mauroarambarri8",
+            "direccion": "Calle Tituse",
+            "tarjeta": "2564123746376323",
+            "productos": [
+                "Proteína Whey Cacaolat",
+                "Creatina monohidrato Kojak"
+            ]
+        }
     ]
-  }
-  
+}

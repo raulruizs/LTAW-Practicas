@@ -25,29 +25,19 @@
             event.preventDefault();
             const username = document.getElementById('username').value;
     
-            fetch('http://localhost:8001/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username }) 
-            })
-            .then(response => response.json())
-            .then(data => { 
-                if (data.success) {
-                    localStorage.setItem('usuario', JSON.stringify(data.usuario)); // ✅ Guarda el usuario
-                    document.getElementById('loginForm').style.display = 'none';
-                    document.getElementById('mensajeExito').textContent = `✅ Bienvenido, ${data.usuario.nombre_real}!`;
-                    document.getElementById('mensajeExito').style.display = 'block';
-    
-                    // Redirigir a la tienda después de 2 segundos
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 2000);
-                } else {
-                    document.getElementById('errorMensaje').textContent = data.error;
+            fetch(`http://localhost:8001/login?username=${username}`)
+                .then(response => response.text()) // recibimos HTML en texto
+                .then(html => {
+                    // Reemplazamos todo el body por el HTML recibido desde el servidor
+                    document.open();
+                    document.write(html);
+                    document.close();
+                })
+                .catch(error => {
+                    document.getElementById('errorMensaje').textContent = 'Error al iniciar sesión';
                     document.getElementById('errorMensaje').style.display = 'block';
-                }
-            })
-            .catch(error => console.error('Error:', error));
+                    console.error('Error:', error);
+                });
         });
     </script>
     

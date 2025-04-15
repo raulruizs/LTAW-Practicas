@@ -26,18 +26,28 @@
             const username = document.getElementById('username').value;
     
             fetch(`http://localhost:8001/login?username=${encodeURIComponent(username)}`)
-                .then(response => response.text()) // recibimos HTML en texto
-                .then(html => {
-                    // Reemplazamos todo el body por el HTML recibido desde el servidor
-                    document.open();
-                    document.write(html);
-                    document.close();
+                .then(response => response.json()) // espera JSON
+                .then(data => {
+                    if (data.success) {
+                        localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                        document.getElementById('loginForm').style.display = 'none';
+                        document.getElementById('mensajeExito').textContent = `✅ Bienvenido, ${data.usuario.nombre_real}!`;
+                        document.getElementById('mensajeExito').style.display = 'block';
+
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 2000);
+                    } else {
+                        document.getElementById('errorMensaje').textContent = data.error;
+                        document.getElementById('errorMensaje').style.display = 'block';
+                    }
                 })
                 .catch(error => {
                     document.getElementById('errorMensaje').textContent = 'Error al iniciar sesión';
                     document.getElementById('errorMensaje').style.display = 'block';
                     console.error('Error:', error);
                 });
+
         });
     </script> 
     

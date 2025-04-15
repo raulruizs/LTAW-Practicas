@@ -42,30 +42,24 @@ function leerArchivo(filePath, contentType, res) {
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url);
 
-    if (req.method === 'POST' && parsedUrl.pathname === '/login') {
-        let body = '';
-
-        req.on('data', chunk => { body += chunk; });
-
-        req.on('end', () => {
-            const params = querystring.parse(body);
-            const username = params.username;
-
-            leerBaseDatos((data) => {
-                if (data) {
-                    const usuario = data.usuarios.find(u => u.nombre === username);
-                    if (usuario) {
-                        res.writeHead(200, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ success: true, usuario }));
-                    } else {
-                        res.writeHead(401, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ success: false, error: 'Usuario no encontrado' }));
-                    }
+    if (req.method === 'GET' && parsedUrl.pathname === '/login') {
+        const query = querystring.parse(parsedUrl.query);
+        const username = query.username;
+    
+        leerBaseDatos((data) => {
+            if (data) {
+                const usuario = data.usuarios.find(u => u.nombre === username);
+                if (usuario) {
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: true, usuario }));
                 } else {
-                    res.writeHead(500, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ success: false, error: 'Error en la base de datos' }));
+                    res.writeHead(401, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: 'Usuario no encontrado' }));
                 }
-            });
+            } else {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: 'Error en la base de datos' }));
+            }
         });
         
     } else if (req.method === "POST" && parsedUrl.pathname === "/finalizar-compra") {

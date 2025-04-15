@@ -25,7 +25,7 @@
             event.preventDefault();
             const username = document.getElementById('username').value;
     
-            fetch(`http://localhost:8001/login?username=${username}`)
+            fetch(`http://localhost:8001/login?username=${encodeURIComponent(username)}`)
                 .then(response => response.text()) // recibimos HTML en texto
                 .then(html => {
                     // Reemplazamos todo el body por el HTML recibido desde el servidor

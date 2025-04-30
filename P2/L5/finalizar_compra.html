@@ -22,6 +22,27 @@
 
         <input type="submit" value="Confirmar Pedido">
     </form>
+    <script>
+        // Recuperar productos del carrito desde localStorage
+        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     
+        const contenedor = document.getElementById("carritoResumen");
+    
+        if (carrito.length === 0) {
+            contenedor.innerHTML = "<p>🛒 Tu carrito está vacío.</p>";
+        } else {
+            let html = "<h2>Resumen del carrito:</h2><ul>";
+            let total = 0;
+    
+            carrito.forEach(producto => {
+                html += `<li>${producto.nombre} - ${producto.precio.toFixed(2)} €</li>`;
+                total += producto.precio;
+            });
+    
+            html += `</ul><p><strong>Total: ${total.toFixed(2)} €</strong></p>`;
+            contenedor.innerHTML = html;
+            localStorage.removeItem("carrito");
+        }
+    </script>
 </body>
 </html>

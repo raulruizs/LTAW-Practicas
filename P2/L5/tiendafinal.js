@@ -66,10 +66,10 @@ const server = http.createServer((req, res) => {
         const query = querystring.parse(parsedUrl.query);
 
         const nuevoPedido = {
-            usuario: "prueba", // temporal, ya que aún no tenemos autenticación completa
+            usuario: "prueba", // temporal
             direccion: query.direccion,
             tarjeta: query.tarjeta,
-            productos: [] // se completará en ejercicios posteriores
+            productos: [] // si se implementa carrito luego
         };
 
         leerBaseDatos((data) => {
@@ -78,16 +78,32 @@ const server = http.createServer((req, res) => {
 
                 fs.writeFile(DATA_FILE, JSON.stringify(data, null, 4), (err) => {
                     if (err) {
-                        res.writeHead(500, { "Content-Type": "application/json" });
-                        res.end(JSON.stringify({ mensaje: "Error al guardar el pedido" }));
+                        res.writeHead(500, { "Content-Type": "text/html" });
+                        res.end("<h2>Error al guardar el pedido.</h2>");
                     } else {
-                        res.writeHead(200, { "Content-Type": "application/json" });
-                        res.end(JSON.stringify({ mensaje: "✅ Pedido realizado con éxito." }));
+                        res.writeHead(200, { "Content-Type": "text/html" });
+                        res.end(`
+                            <!DOCTYPE html>
+                            <html lang="es">
+                            <head>
+                                <meta charset="UTF-8">
+                                <title>Compra realizada</title>
+                                <link rel="stylesheet" href="/finalizar.css">
+                            </head>
+                            <body>
+                                <div class="mensaje-exito">
+                                    <h1>✅ Pedido realizado con éxito</h1>
+                                    <p>Gracias por tu compra.</p>
+                                    <a class="volver-tienda" href="/index.html">← Volver a la tienda</a>
+                                </div>
+                            </body>
+                            </html>
+                        `);
                     }
                 });
             } else {
-                res.writeHead(500, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({ mensaje: "Error al acceder a la base de datos" }));
+                res.writeHead(500, { "Content-Type": "text/html" });
+                res.end("<h2>Error al acceder a la base de datos.</h2>");
             }
         });
 
@@ -122,7 +138,7 @@ const server = http.createServer((req, res) => {
             }
         });
     } else {
-        // Manejo de archivos estáticos
+        // Archivos estáticos
         let filePath = '.' + parsedUrl.pathname;
         if (filePath === './') {
             filePath = './index.html';
@@ -143,7 +159,6 @@ const server = http.createServer((req, res) => {
         leerArchivo(filePath, contentType, res);
     }
 });
-
 
 // Iniciar servidor
 server.listen(PORT, () => {

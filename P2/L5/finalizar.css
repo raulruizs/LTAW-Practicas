@@ -93,3 +93,16 @@ button:hover {
     margin-top: 15px;
     color: #0073e6;
 }
+
+.mensaje-exito {
+    background: rgba(255, 255, 255, 0.95);
+    color: green;
+    padding: 20px;
+    margin-top: 20px;
+    border: 2px solid green;
+    border-radius: 10px;
+    font-size: 16px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 0 8px rgba(0, 128, 0, 0.3);
+}

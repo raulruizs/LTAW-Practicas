@@ -120,6 +120,18 @@
             "direccion": "Calle José Bordalás ,1",
             "tarjeta": "5789-1235-0688-3452",
             "productos": []
+        },
+        {
+            "usuario": "prueba",
+            "direccion": "Calle José Bordalás ,1",
+            "tarjeta": "5789-1235-0688-3452",
+            "productos": []
+        },
+        {
+            "usuario": "prueba",
+            "direccion": "Calle Titulcia",
+            "tarjeta": "2564123746376323",
+            "productos": []
         }
     ]
 }

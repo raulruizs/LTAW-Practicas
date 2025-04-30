@@ -22,6 +22,11 @@
 
         <input type="submit" value="Confirmar Pedido">
     </form>
+
+    <div class="mensaje-exito" id="mensajeExito" style="display: none;">
+        ✅ Compra realizada con éxito. ¡Gracias por tu pedido!
+    </div>
+    
     <script>
         // Recuperar productos del carrito desde localStorage
         const carrito = JSON.parse(localStorage.getItem("carrito")) || [];

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
-    <div class="login-container">
+    <div class="login-container" id="contenedorLogin">
         <h1>Iniciar sesión</h1>
         <form id="loginForm">
             <label for="username">Nombre de usuario:</label>
@@ -17,16 +17,33 @@
         </form>
         <p id="errorMensaje" style="color: red; display: none;"></p>
         <p id="mensajeExito" style="color: green; display: none;"></p>
-
     </div>
 
     <script>
+        // Verificar si ya hay sesión activa
+        fetch("http://localhost:8001/login", { credentials: 'include' })
+            .then(res => {
+                if (res.headers.get("Content-Type")?.includes("text/html")) {
+                    return res.text().then(html => {
+                        document.body.innerHTML = html; // Mostrar directamente la página "Ya has iniciado sesión"
+                        throw new Error("Ya logeado");
+                    });
+                }
+                return res.json();
+            })
+            .catch(error => {
+                if (error.message !== "Ya logeado") {
+                    console.error('Error comprobando sesión:', error);
+                }
+            });
+
+        // Manejador del formulario
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
     
-            fetch(`http://localhost:8001/login?username=${encodeURIComponent(username)}`)
-                .then(response => response.json()) // espera JSON
+            fetch(`http://localhost:8001/login?username=${encodeURIComponent(username)}`, { credentials: 'include' })
+                .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         localStorage.setItem('usuario', JSON.stringify(data.usuario));
@@ -47,11 +64,7 @@
                     document.getElementById('errorMensaje').style.display = 'block';
                     console.error('Error:', error);
                 });
-
         });
     </script> 
-    
-    
-    
 </body>
 </html>

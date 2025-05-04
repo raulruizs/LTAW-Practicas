@@ -26,6 +26,16 @@ function leerBaseDatos(callback) {
     });
 }
 
+function leerCookies(cookieHeader) {
+    const cookies = {};
+    if (!cookieHeader) return cookies;
+    cookieHeader.split(';').forEach(cookie => {
+        const [key, value] = cookie.trim().split('=');
+        cookies[key] = decodeURIComponent(value);
+    });
+    return cookies;
+}
+
 // Función para leer archivos y responder
 function leerArchivo(filePath, contentType, res) {
     fs.readFile(filePath, (err, content) => {
@@ -43,25 +53,54 @@ function leerArchivo(filePath, contentType, res) {
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url);
 
-    if (req.method === 'GET' && parsedUrl.pathname === '/login') {
-        const query = querystring.parse(parsedUrl.query);
-        const username = query.username;
-    
-        leerBaseDatos((data) => {
-            if (data) {
-                const usuario = data.usuarios.find(u => u.nombre === username);
-                if (usuario) {
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ success: true, usuario }));
-                } else {
-                    res.writeHead(401, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ success: false, error: 'Usuario no encontrado' }));
-                }
+} else if (req.method === 'GET' && parsedUrl.pathname === '/login') {
+    const cookies = leerCookies(req.headers.cookie);
+    const query = querystring.parse(parsedUrl.query);
+    const username = query.username;
+
+    // Si ya hay cookie de usuario => ya ha iniciado sesión
+    if (cookies.user) {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(`
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <title>Ya estás dentro</title>
+                <link rel="stylesheet" href="/login.css">
+            </head>
+            <body>
+                <div class="login-container">
+                    <h1>🔒 Ya has iniciado sesión</h1>
+                    <p>Hola, ${cookies.user}. Ya estás logeado.</p>
+                    <a href="/index.html" class="volver-tienda">Ir a la tienda</a>
+                </div>
+            </body>
+            </html>
+        `);
+        return;
+    }
+
+    // Si no hay cookie, procesa el login como antes
+    leerBaseDatos((data) => {
+        if (data) {
+            const usuario = data.usuarios.find(u => u.nombre === username);
+            if (usuario) {
+                res.writeHead(200, {
+                    'Content-Type': 'application/json',
+                    'Set-Cookie': `user=${encodeURIComponent(username)}; Path=/; HttpOnly`
+                });
+                res.end(JSON.stringify({ success: true, usuario }));
             } else {
-                res.writeHead(500, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ success: false, error: 'Error en la base de datos' }));
+                res.writeHead(401, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: 'Usuario no encontrado' }));
             }
-        });
+        } else {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: 'Error en la base de datos' }));
+        }
+    });
+
 
     } else if (req.method === "GET" && parsedUrl.pathname === "/finalizar-compra") {
         const query = querystring.parse(parsedUrl.query);

@@ -53,7 +53,7 @@ function leerArchivo(filePath, contentType, res) {
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url);
 
-    // Caso para la página de login
+    // Ruta para la página de login
     if (req.method === 'GET' && parsedUrl.pathname === '/login') {
         const cookies = leerCookies(req.headers.cookie);  // Leer cookies
 
@@ -103,56 +103,38 @@ const server = http.createServer((req, res) => {
             </html>
         `);
 
-    } else if (req.method === 'GET' && parsedUrl.pathname === '/login') {
-        const cookies = leerCookies(req.headers.cookie);
-        const query = querystring.parse(parsedUrl.query);
-        const username = query.username;
-    
-        // Si ya hay cookie de usuario => ya ha iniciado sesión
-        if (cookies.user) {
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(`
-                <!DOCTYPE html>
-                <html lang="es">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Ya estás dentro</title>
-                    <link rel="stylesheet" href="/login.css">
-                </head>
-                <body>
-                    <div class="login-container">
-                        <h1>🔒 Ya has iniciado sesión</h1>
-                        <p>Hola, ${cookies.user}. Ya estás logeado.</p>
-                        <a href="/index.html" class="volver-tienda">Ir a la tienda</a>
-                    </div>
-                </body>
-                </html>
-            `);
-            return;
-        }
-    
-        // Si no hay cookie, procesa el login como antes
-        leerBaseDatos((data) => {
-            if (data) {
-                const usuario = data.usuarios.find(u => u.nombre === username);
-                if (usuario) {
-                    // Establecer la cookie y redirigir al index.html
-                    res.writeHead(302, {
-                        'Location': '/index.html', // Redirigir al index.html
-                        'Set-Cookie': `user=${encodeURIComponent(username)}; Path=/; HttpOnly; Max-Age=3600`, // Establecer la cookie
-                        'Content-Type': 'text/html'
-                    });
-                    res.end(); // Finalizar la respuesta
-                } else {
-                    res.writeHead(401, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ success: false, error: 'Usuario no encontrado' }));
-                }
-            } else {
-                res.writeHead(500, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ success: false, error: 'Error en la base de datos' }));
-            }
+    // Ruta para procesar el login cuando se envía el formulario (POST)
+    } else if (req.method === 'POST' && parsedUrl.pathname === '/login') {
+        let body = '';
+
+        req.on('data', chunk => {
+            body += chunk.toString(); // Concatena los datos
         });
 
+        req.on('end', () => {
+            const { username } = querystring.parse(body); // Extraer el nombre de usuario del formulario
+
+            leerBaseDatos((data) => {
+                if (data) {
+                    const usuario = data.usuarios.find(u => u.nombre === username);
+                    if (usuario) {
+                        // Establecer la cookie y redirigir al index.html
+                        res.writeHead(302, {
+                            'Location': '/index.html', // Redirigir al index.html
+                            'Set-Cookie': `user=${encodeURIComponent(username)}; Path=/; HttpOnly; Max-Age=3600`, // Establecer la cookie
+                            'Content-Type': 'text/html'
+                        });
+                        res.end(); // Finalizar la respuesta
+                    } else {
+                        res.writeHead(401, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ success: false, error: 'Usuario no encontrado' }));
+                    }
+                } else {
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: 'Error en la base de datos' }));
+                }
+            });
+        });
     } else if (parsedUrl.pathname === '/finalizar-compra') {
         // Código para finalizar compra
         const query = querystring.parse(parsedUrl.query);

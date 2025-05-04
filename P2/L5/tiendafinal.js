@@ -53,7 +53,7 @@ function leerArchivo(filePath, contentType, res) {
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url);
 
-} else if (req.method === 'GET' && parsedUrl.pathname === '/login') {
+    } else if (req.method === 'GET' && parsedUrl.pathname === '/login') {
     const cookies = leerCookies(req.headers.cookie);
     const query = querystring.parse(parsedUrl.query);
     const username = query.username;

@@ -52,12 +52,18 @@
             document.getElementById('usuarioInfo').textContent = `Conectado como: ${usuarioData.nombre}`;
         }
         function añadir_al_carrito(nombre, precio) {
-        let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    carrito.push({ nombre, precio });
+    localStorage.setItem("carrito", JSON.stringify(carrito));
 
-        carrito.push({ nombre, precio });
-        localStorage.setItem("carrito", JSON.stringify(carrito));
-
+    const usuario = localStorage.getItem("usuario");
+    if (usuario) {
+        const datos = JSON.parse(usuario);
+        alert(`Producto añadido al carrito por ${datos.nombre_real} 🛒`);
+    } else {
         alert("Producto añadido al carrito 🛒");
+    }
+
     }
     </script>
 

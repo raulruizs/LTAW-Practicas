@@ -8,6 +8,17 @@ body {
     text-align: center;
 }
 
+#usuarioInfo {
+    font-size: 1.2em; /* Tamaño de fuente */
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
 h1 {
     color: whitesmoke;
     font-family:Verdana, Geneva, Tahoma, sans-serif;

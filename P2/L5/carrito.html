@@ -22,7 +22,7 @@
             let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
             let carritoDiv = document.getElementById("carrito");
     
-            console.log("Carrito cargado:", carrito); // Para comprobar en consola
+            console.log("Carrito cargado:", carrito);
     
             if (carrito.length === 0) {
                 carritoDiv.innerHTML = "<p>El carrito está vacío.</p>";

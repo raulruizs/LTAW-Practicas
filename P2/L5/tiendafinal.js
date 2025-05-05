@@ -182,31 +182,49 @@ const server = http.createServer((req, res) => {
         const cookies = leerCookies(req.headers.cookie);
         const usuario = cookies.user;
 
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(`
-            <!DOCTYPE html>
-            <html lang="es">
-            <head>
-                <meta charset="UTF-8">
-                <title>Tienda Principal</title>
-                <link rel="stylesheet" href="/index.css">
-            </head>
-            <body>
-                <header>
-                    <h1>Tienda Online</h1>
-                    ${
-                        usuario
-                            ? `<p>Hola, <strong>${usuario}</strong></p>`
-                            : `<a href="/login">Iniciar sesión</a>`
-                    }
-                </header>
-                <main>
-                    <h2>Bienvenido a nuestra tienda</h2>
-                    <p>Aquí iría el contenido de productos</p>
-                </main>
-            </body>
-            </html>
-        `);
+        leerBaseDatos((data) => {
+            if (!data) {
+                res.writeHead(500, { 'Content-Type': 'text/html' });
+                res.end('<h2>Error al cargar los productos</h2>');
+                return;
+            }
+
+            // Generar HTML para los productos
+            const productosHTML = data.productos.map(prod => `
+                <div class="producto">
+                    <h3>${prod.nombre}</h3>
+                    <p>Precio: $${prod.precio}</p>
+                    <p>${prod.descripcion}</p>
+                </div>
+            `).join('');
+
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(`
+                <!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Tienda Principal</title>
+                    <link rel="stylesheet" href="/index.css">
+                </head>
+                <body>
+                    <header>
+                        <h1>Tienda Online</h1>
+                        ${
+                            usuario
+                                ? `<p>Hola, <strong>${usuario}</strong></p>`
+                                : `<a href="/login">Iniciar sesión</a>`
+                        }
+                    </header>
+                    <main>
+                        <h2>Bienvenido a nuestra tienda</h2>
+                        ${productosHTML}
+                    </main>
+                </body>
+                </html>
+            `);
+        });
+
     } else {
         // Archivos estáticos
         let filePath = '.' + parsedUrl.pathname;

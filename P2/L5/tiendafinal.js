@@ -53,11 +53,41 @@ function leerArchivo(filePath, contentType, res) {
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url);
 
-    // Ruta para la página de login
-    if (req.method === 'GET' && parsedUrl.pathname === '/login') {
-        const cookies = leerCookies(req.headers.cookie);  // Leer cookies
+    // Página principal con login dinámico
+    if (req.method === 'GET' && parsedUrl.pathname === '/index.html') {
+        const cookies = leerCookies(req.headers.cookie);
+        const usuario = cookies.user;
 
-        // Si ya está logeado (cookie 'user' está presente)
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(`
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <title>Tienda Principal</title>
+                <link rel="stylesheet" href="/style.css">
+            </head>
+            <body>
+                <header>
+                    <h1>Bienvenido a la Tienda</h1>
+                    ${
+                        usuario
+                            ? `<p>Hola, <strong>${usuario}</strong> | <a href="/logout">Cerrar sesión</a></p>`
+                            : `<a href="/login">Iniciar sesión</a>`
+                    }
+                </header>
+                <main>
+                    <h2>Productos destacados</h2>
+                    <p>(Aquí iría el contenido de la tienda)</p>
+                </main>
+            </body>
+            </html>
+        `);
+    }
+
+    // Ruta para login (GET)
+    else if (req.method === 'GET' && parsedUrl.pathname === '/login') {
+        const cookies = leerCookies(req.headers.cookie);
         if (cookies.user) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(`
@@ -77,10 +107,9 @@ const server = http.createServer((req, res) => {
                 </body>
                 </html>
             `);
-            return;  // Detener el procesamiento si ya está logeado
+            return;
         }
 
-        // Si no hay cookie, muestra el formulario de login
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(`
             <!DOCTYPE html>
@@ -102,29 +131,29 @@ const server = http.createServer((req, res) => {
             </body>
             </html>
         `);
+    }
 
-    // Ruta para procesar el login cuando se envía el formulario (POST)
-    } else if (req.method === 'POST' && parsedUrl.pathname === '/login') {
+    // Ruta para procesar login (POST)
+    else if (req.method === 'POST' && parsedUrl.pathname === '/login') {
         let body = '';
 
         req.on('data', chunk => {
-            body += chunk.toString(); // Concatena los datos
+            body += chunk.toString();
         });
 
         req.on('end', () => {
-            const { username } = querystring.parse(body); // Extraer el nombre de usuario del formulario
+            const { username } = querystring.parse(body);
 
             leerBaseDatos((data) => {
                 if (data) {
                     const usuario = data.usuarios.find(u => u.nombre === username);
                     if (usuario) {
-                        // Establecer la cookie y redirigir al index.html
                         res.writeHead(302, {
-                            'Location': '/index.html', // Redirigir al index.html
-                            'Set-Cookie': `user=${encodeURIComponent(username)}; Path=/; HttpOnly; Max-Age=3600`, // Establecer la cookie
+                            'Location': '/index.html',
+                            'Set-Cookie': `user=${encodeURIComponent(username)}; Path=/; HttpOnly; Max-Age=3600`,
                             'Content-Type': 'text/html'
                         });
-                        res.end(); // Finalizar la respuesta
+                        res.end();
                     } else {
                         res.writeHead(401, { 'Content-Type': 'application/json' });
                         res.end(JSON.stringify({ success: false, error: 'Usuario no encontrado' }));
@@ -135,14 +164,25 @@ const server = http.createServer((req, res) => {
                 }
             });
         });
-    } else if (parsedUrl.pathname === '/finalizar-compra') {
-        // Código para finalizar compra
+    }
+
+    // Ruta para logout
+    else if (req.method === 'GET' && parsedUrl.pathname === '/logout') {
+        res.writeHead(302, {
+            'Location': '/index.html',
+            'Set-Cookie': 'user=; Max-Age=0; Path=/; HttpOnly'
+        });
+        res.end();
+    }
+
+    // Finalizar compra
+    else if (parsedUrl.pathname === '/finalizar-compra') {
         const query = querystring.parse(parsedUrl.query);
         const nuevoPedido = {
-            usuario: "prueba",  // Temporal
+            usuario: "prueba",
             direccion: query.direccion,
             tarjeta: query.tarjeta,
-            productos: []  // Si se implementa carrito luego
+            productos: []
         };
 
         leerBaseDatos((data) => {
@@ -178,9 +218,10 @@ const server = http.createServer((req, res) => {
                 res.end("<h2>Error al acceder a la base de datos.</h2>");
             }
         });
+    }
 
-    } else {
-        // Archivos estáticos
+    // Archivos estáticos
+    else {
         let filePath = '.' + parsedUrl.pathname;
         if (filePath === './') {
             filePath = './index.html';

@@ -65,7 +65,7 @@ const server = http.createServer((req, res) => {
             <head>
                 <meta charset="UTF-8">
                 <title>Tienda Principal</title>
-                <link rel="stylesheet" href="/style.css">
+                <link rel="stylesheet" href="/index.css">
             </head>
             <body>
                 <header>

@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const querystring = require('querystring');
-
 const PORT = 8001;
 const DATA_FILE = './tienda.json';
 
@@ -102,7 +101,7 @@ const server = http.createServer((req, res) => {
             </body>
             </html>
         `);
-
+        
     // Ruta para procesar el login cuando se envía el formulario (POST)
     } else if (req.method === 'POST' && parsedUrl.pathname === '/login') {
         let body = '';
@@ -179,12 +178,44 @@ const server = http.createServer((req, res) => {
             }
         });
 
+    } else if (req.method === 'GET' && parsedUrl.pathname === '/index.html') {
+        const cookies = leerCookies(req.headers.cookie);
+        const usuario = cookies.user;
+
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(`
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <title>Tienda Principal</title>
+                <link rel="stylesheet" href="/style.css">
+            </head>
+            <body>
+                <header>
+                    <h1>Tienda Online</h1>
+                    ${
+                        usuario
+                            ? `<p>Hola, <strong>${usuario}</strong></p>`
+                            : `<a href="/login">Iniciar sesión</a>`
+                    }
+                </header>
+                <main>
+                    <h2>Bienvenido a nuestra tienda</h2>
+                    <p>Aquí iría el contenido de productos</p>
+                </main>
+            </body>
+            </html>
+        `);
     } else {
         // Archivos estáticos
         let filePath = '.' + parsedUrl.pathname;
         if (filePath === './') {
-            filePath = './index.html';
+            res.writeHead(302, { Location: '/index.html' });
+            res.end();
+            return;
         }
+        
 
         const extname = path.extname(filePath).toLowerCase();
         const contentType = {
@@ -202,7 +233,8 @@ const server = http.createServer((req, res) => {
     }
 });
 
-// Iniciar servidor
+// Iniciar el servidor
 server.listen(PORT, () => {
-    console.log(`Servidor funcionando en http://localhost:${PORT}`);
+    console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
+

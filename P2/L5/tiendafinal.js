@@ -3,9 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const querystring = require('querystring');
+
 const PORT = 8001;
 const DATA_FILE = './tienda.json';
 
+// Función para leer tienda.json
 function leerBaseDatos(callback) {
     fs.readFile(DATA_FILE, 'utf8', (err, data) => {
         if (err) {
@@ -23,6 +25,7 @@ function leerBaseDatos(callback) {
     });
 }
 
+// Función para leer cookies de la cabecera 'Cookie'
 function leerCookies(cookieHeader) {
     const cookies = {};
     if (!cookieHeader) return cookies;
@@ -33,6 +36,7 @@ function leerCookies(cookieHeader) {
     return cookies;
 }
 
+// Función para leer archivos y responder
 function leerArchivo(filePath, contentType, res) {
     fs.readFile(filePath, (err, content) => {
         if (err) {
@@ -45,11 +49,15 @@ function leerArchivo(filePath, contentType, res) {
     });
 }
 
+// Crear servidor
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url);
 
+    // Caso para la página de login
     if (req.method === 'GET' && parsedUrl.pathname === '/login') {
-        const cookies = leerCookies(req.headers.cookie);
+        const cookies = leerCookies(req.headers.cookie);  // Leer cookies
+
+        // Si ya está logeado (cookie 'user' está presente)
         if (cookies.user) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(`
@@ -69,9 +77,10 @@ const server = http.createServer((req, res) => {
                 </body>
                 </html>
             `);
-            return;
+            return;  // Detener el procesamiento si ya está logeado
         }
 
+        // Si no hay cookie, muestra el formulario de login
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(`
             <!DOCTYPE html>
@@ -96,19 +105,25 @@ const server = http.createServer((req, res) => {
 
     } else if (req.method === 'POST' && parsedUrl.pathname === '/login') {
         let body = '';
-        req.on('data', chunk => body += chunk.toString());
+        req.on('data', chunk => {
+            body += chunk;
+        });
+
         req.on('end', () => {
-            const { username } = querystring.parse(body);
+            const postData = querystring.parse(body);
+            const username = postData.username;
+
+            // Procesar el inicio de sesión
             leerBaseDatos((data) => {
                 if (data) {
                     const usuario = data.usuarios.find(u => u.nombre === username);
                     if (usuario) {
-                        res.writeHead(302, {
-                            'Location': '/index.html',
+                        // Si el usuario existe, establecer la cookie
+                        res.writeHead(200, {
                             'Set-Cookie': `user=${encodeURIComponent(username)}; Path=/; HttpOnly; Max-Age=3600`,
-                            'Content-Type': 'text/html'
+                            'Content-Type': 'application/json'
                         });
-                        res.end();
+                        res.end(JSON.stringify({ success: true, usuario }));
                     } else {
                         res.writeHead(401, { 'Content-Type': 'application/json' });
                         res.end(JSON.stringify({ success: false, error: 'Usuario no encontrado' }));
@@ -120,70 +135,14 @@ const server = http.createServer((req, res) => {
             });
         });
 
-    } else if (req.method === 'GET' && parsedUrl.pathname === '/index.html') {
-        const cookies = leerCookies(req.headers.cookie);
-        const usuario = cookies.user;
-
-        leerBaseDatos((data) => {
-            if (!data) {
-                res.writeHead(500, { 'Content-Type': 'text/html' });
-                res.end('<h2>Error al cargar productos</h2>');
-                return;
-            }
-
-            const productosHTML = data.productos.map(p => `
-                <div class="producto">
-                    <h3>${p.nombre}</h3>
-                    <p>${p.descripcion}</p>
-                    <p><strong>$${p.precio}</strong></p>
-                </div>
-            `).join('');
-
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(`
-                <!DOCTYPE html>
-                <html lang="es">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Tienda Principal</title>
-                    <link rel="stylesheet" href="/index.css">
-                    <style>
-                        .producto {
-                            border: 1px solid #ccc;
-                            padding: 10px;
-                            margin: 10px;
-                            border-radius: 8px;
-                            background-color: #f9f9f9;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <header>
-                        <h1>Tienda Online</h1>
-                        ${
-                            usuario
-                                ? `<p>Hola, <strong>${usuario}</strong></p>`
-                                : `<a href="/login">Iniciar sesión</a>`
-                        }
-                    </header>
-                    <main>
-                        <h2>Bienvenido a nuestra tienda</h2>
-                        <div class="productos">
-                            ${productosHTML}
-                        </div>
-                    </main>
-                </body>
-                </html>
-            `);
-        });
-
     } else if (parsedUrl.pathname === '/finalizar-compra') {
+        // Código para finalizar compra
         const query = querystring.parse(parsedUrl.query);
         const nuevoPedido = {
             usuario: "prueba",  // Temporal
             direccion: query.direccion,
             tarjeta: query.tarjeta,
-            productos: []
+            productos: []  // Si se implementa carrito luego
         };
 
         leerBaseDatos((data) => {
@@ -221,11 +180,10 @@ const server = http.createServer((req, res) => {
         });
 
     } else {
+        // Archivos estáticos
         let filePath = '.' + parsedUrl.pathname;
         if (filePath === './') {
-            res.writeHead(302, { Location: '/index.html' });
-            res.end();
-            return;
+            filePath = './index.html';
         }
 
         const extname = path.extname(filePath).toLowerCase();
@@ -244,6 +202,7 @@ const server = http.createServer((req, res) => {
     }
 });
 
+// Iniciar servidor
 server.listen(PORT, () => {
-    console.log(`Servidor en ejecución en http://localhost:${PORT}`);
+    console.log(`Servidor funcionando en http://localhost:${PORT}`);
 });

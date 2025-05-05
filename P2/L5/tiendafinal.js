@@ -183,30 +183,9 @@ const server = http.createServer((req, res) => {
     } else {
         // Archivos estáticos
         let filePath = '.' + parsedUrl.pathname;
-        if (filePath === './index.html') {
-            const cookies = leerCookies(req.headers.cookie);
-        
-            fs.readFile('./index.html', 'utf8', (err, content) => {
-                if (err) {
-                    res.writeHead(500, { 'Content-Type': 'text/html' });
-                    res.end('<h1>Error al cargar la página principal</h1>');
-                } else {
-                    const nombreUsuario = cookies.user;
-        
-                    // Inserta dinámicamente el nombre del usuario o el enlace al login
-                    const contenidoPersonalizado = content.replace(
-                        '<div id="usuario-info"></div>',
-                        nombreUsuario
-                            ? `<div id="usuario-info">👋 Bienvenido, <strong>${nombreUsuario}</strong></div>`
-                            : `<div id="usuario-info"><a href="/login">🔐 Iniciar sesión</a></div>`
-                    );
-        
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end(contenidoPersonalizado, 'utf-8');
-                }
-            });
+        if (filePath === './') {
+            filePath = './index.html';
         }
-        
 
         const extname = path.extname(filePath).toLowerCase();
         const contentType = {

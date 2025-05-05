@@ -194,7 +194,7 @@ const server = http.createServer((req, res) => {
             '.js': 'text/javascript',
             '.jpg': 'image/jpeg',
             '.jpeg': 'image/jpeg',
-            '.png': 'image/png',
+            '.png': 'image/png', 
             '.gif': 'image/gif',
             '.webp': 'image/webp',
         }[extname] || 'application/octet-stream';

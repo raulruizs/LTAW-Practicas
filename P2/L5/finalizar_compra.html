@@ -28,8 +28,17 @@
     </div>
     
     <script>
-        // Recuperar productos del carrito desde localStorage
-        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        function leerCookie(nombre) {
+            const cookies = document.cookie.split(';');
+            for (let c of cookies) {
+                const [key, val] = c.trim().split('=');
+                if (key === nombre) return decodeURIComponent(val);
+            }
+            return null;
+        }
+    
+        const carritoCookie = leerCookie("carrito");
+        const carrito = carritoCookie ? JSON.parse(carritoCookie) : [];
     
         const contenedor = document.getElementById("carritoResumen");
     
@@ -46,8 +55,8 @@
     
             html += `</ul><p><strong>Total: ${total.toFixed(2)} €</strong></p>`;
             contenedor.innerHTML = html;
-            localStorage.removeItem("carrito");
         }
     </script>
+    
 </body>
 </html>

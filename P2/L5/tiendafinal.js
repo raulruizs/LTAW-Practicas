@@ -188,9 +188,9 @@ const server = http.createServer((req, res) => {
             const username = cookies.user;
         
             const mensajeUsuario = username 
-                ? `<p>👤 Conectado como: <strong>${username}</strong></p>`
-                : `<a href="/login">🔐 Iniciar sesión</a>`;
-        
+                ? `<div id="usuarioInfo">👤 Conectado como: <strong>${username}</strong></div>`
+                : `<div id="usuarioInfo"><a href="/login" style="color: yellow;">🔐 Iniciar sesión</a></div>`;
+
             fs.readFile('./index.html', 'utf8', (err, contenido) => {
                 if (err) {
                     res.writeHead(500, { 'Content-Type': 'text/html' });

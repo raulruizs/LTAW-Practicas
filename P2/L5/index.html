@@ -53,10 +53,6 @@
     
     <script>
         const usuario = localStorage.getItem('usuario');
-        if (usuario) {
-            const usuarioData = JSON.parse(usuario);
-            document.getElementById('usuarioInfo').textContent = `Conectado como: ${usuarioData.nombre}`;
-        }
         function añadir_al_carrito(nombre, precio) {
     let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     carrito.push({ nombre, precio });

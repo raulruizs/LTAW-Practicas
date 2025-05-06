@@ -134,7 +134,31 @@ const server = http.createServer((req, res) => {
                 }
             });
         });
-
+    } else if (req.method === 'GET' && parsedUrl.pathname === '/añadir-carrito') {
+        const query = querystring.parse(parsedUrl.query);
+        const nombre = query.nombre;
+        const precio = parseFloat(query.precio);
+    
+        const cookies = leerCookies(req.headers.cookie);
+        let carrito = [];
+    
+        if (cookies.carrito) {
+            try {
+                carrito = JSON.parse(cookies.carrito);
+            } catch (e) {
+                carrito = [];
+            }
+        }
+    
+        carrito.push({ nombre, precio });
+    
+        res.writeHead(200, {
+            'Set-Cookie': `carrito=${encodeURIComponent(JSON.stringify(carrito))}; Path=/; Max-Age=3600`,
+            'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify({ success: true, mensaje: 'Producto añadido al carrito' }));
+        return;
+    
     } else if (parsedUrl.pathname === '/finalizar-compra') {
         // Código para finalizar compra
         const query = querystring.parse(parsedUrl.query);

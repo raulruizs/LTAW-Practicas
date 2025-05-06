@@ -10,6 +10,8 @@
     <header class="encabezado">
         <h1 class="titulo-tienda">💪 NodeLift 💪</h1>
         <h2 class="subtitulo">-- Tienda de Suplementación Deportiva --</h2>
+        <a href="carrito.html"><button>🛒 Ver carrito</button></a>
+        <a href="finalizar_compra.html"><button>✅ Finalizar compra</button></a>
     </header>
     
     <!--LOGIN_PLACEHOLDER-->
@@ -45,9 +47,9 @@
 
     <script>
         function añadir_al_carrito(nombre, precio) {
-            fetch(`/anadir-carrito?nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}`, {
+            fetch(`/añadir-carrito?nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}`, {
                 method: 'GET',
-                credentials: 'include' // importante para que se guarde la cookie
+                credentials: 'include'
             })
             .then(res => res.json())
             .then(data => {

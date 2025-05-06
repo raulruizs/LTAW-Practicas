@@ -3,11 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const querystring = require('querystring');
+
 const PORT = 8001;
 const DATA_FILE = './tienda.json';
 
-
-// Función para leer tienda.json
+// Leer base de datos
 function leerBaseDatos(callback) {
     fs.readFile(DATA_FILE, 'utf8', (err, data) => {
         if (err) {
@@ -25,7 +25,7 @@ function leerBaseDatos(callback) {
     });
 }
 
-// Función para leer cookies de la cabecera 'Cookie'
+// Leer cookies
 function leerCookies(cookieHeader) {
     const cookies = {};
     if (!cookieHeader) return cookies;
@@ -36,7 +36,7 @@ function leerCookies(cookieHeader) {
     return cookies;
 }
 
-// Función para leer archivos y responder
+// Leer archivos
 function leerArchivo(filePath, contentType, res) {
     fs.readFile(filePath, (err, content) => {
         if (err) {
@@ -53,72 +53,31 @@ function leerArchivo(filePath, contentType, res) {
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url);
 
-    // Caso para la página de login
+    // Página de login
     if (req.method === 'GET' && parsedUrl.pathname === '/login') {
-        const cookies = leerCookies(req.headers.cookie);  // Leer cookies
-
-        // Si ya está logeado (cookie 'user' está presente)
+        const cookies = leerCookies(req.headers.cookie);
         if (cookies.user) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(`
-                <!DOCTYPE html>
-                <html lang="es">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Ya estás dentro</title>
-                    <link rel="stylesheet" href="/login.css">
-                </head>
-                <body>
-                    <div class="login-container">
-                        <h1>🔒 Ya has iniciado sesión</h1>
-                        <p>Hola, ${cookies.user}. Ya estás logeado.</p>
-                        <a href="/index.html" class="volver-tienda">Ir a la tienda</a>
-                    </div>
-                </body>
-                </html>
-            `);
-            return;  // Detener el procesamiento si ya está logeado
+            res.end(`<html><body><h1>Hola, ${cookies.user}, ya estás logeado.</h1><a href="/index.html">Volver</a></body></html>`);
+            return;
         }
 
-        // Si no hay cookie, muestra el formulario de login
         res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(`
-            <!DOCTYPE html>
-            <html lang="es">
-            <head>
-                <meta charset="UTF-8">
-                <title>Iniciar sesión</title>
-                <link rel="stylesheet" href="/login.css">
-            </head>
-            <body>
-                <div class="login-container">
-                    <h1>Iniciar sesión</h1>
-                    <form action="/login" method="POST">
-                        <label for="username">Usuario:</label>
-                        <input type="text" id="username" name="username" required>
-                        <button type="submit">Iniciar sesión</button>
-                    </form>
-                </div>
-            </body>
-            </html>
-        `);
+        leerArchivo('./login.html', 'text/html', res);
+    }
 
-    } else if (req.method === 'POST' && parsedUrl.pathname === '/login') {
+    // Procesar login
+    else if (req.method === 'POST' && parsedUrl.pathname === '/login') {
         let body = '';
-        req.on('data', chunk => {
-            body += chunk;
-        });
-
+        req.on('data', chunk => body += chunk);
         req.on('end', () => {
             const postData = querystring.parse(body);
             const username = postData.username;
 
-            // Procesar el inicio de sesión
-            leerBaseDatos((data) => {
+            leerBaseDatos(data => {
                 if (data) {
                     const usuario = data.usuarios.find(u => u.nombre === username);
                     if (usuario) {
-                        // Si el usuario existe, establecer la cookie
                         res.writeHead(200, {
                             'Set-Cookie': `user=${encodeURIComponent(username)}; Path=/; HttpOnly; Max-Age=3600`,
                             'Content-Type': 'application/json'
@@ -130,18 +89,20 @@ const server = http.createServer((req, res) => {
                     }
                 } else {
                     res.writeHead(500, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ success: false, error: 'Error en la base de datos' }));
+                    res.end(JSON.stringify({ success: false, error: 'Error en base de datos' }));
                 }
             });
         });
-    } else if (req.method === 'GET' && parsedUrl.pathname === '/anadir-carrito') {
+    }
+
+    // Añadir producto al carrito (con acumulación)
+    else if (req.method === 'GET' && parsedUrl.pathname === '/anadir-carrito') {
         const query = querystring.parse(parsedUrl.query);
         const nombre = query.nombre;
         const precio = parseFloat(query.precio);
-    
         const cookies = leerCookies(req.headers.cookie);
+
         let carrito = [];
-    
         if (cookies.carrito) {
             try {
                 carrito = JSON.parse(cookies.carrito);
@@ -149,24 +110,24 @@ const server = http.createServer((req, res) => {
                 carrito = [];
             }
         }
-    
+
         carrito.push({ nombre, precio });
-    
+
         res.writeHead(200, {
             'Set-Cookie': `carrito=${encodeURIComponent(JSON.stringify(carrito))}; Path=/; Max-Age=3600`,
             'Content-Type': 'application/json'
         });
         res.end(JSON.stringify({ success: true, mensaje: 'Producto añadido al carrito' }));
-        return;
-    
-    } else if (parsedUrl.pathname === '/finalizar-compra') {
-        // Código para finalizar compra
+    }
+
+    // Finalizar compra
+    else if (parsedUrl.pathname === '/finalizar-compra') {
         const query = querystring.parse(parsedUrl.query);
         const nuevoPedido = {
-            usuario: "prueba",  // Temporal
+            usuario: "prueba",  // se puede mejorar más adelante
             direccion: query.direccion,
             tarjeta: query.tarjeta,
-            productos: []  // Si se implementa carrito luego
+            productos: []  // si se usa carrito real
         };
 
         leerBaseDatos((data) => {
@@ -178,23 +139,7 @@ const server = http.createServer((req, res) => {
                         res.end("<h2>Error al guardar el pedido.</h2>");
                     } else {
                         res.writeHead(200, { "Content-Type": "text/html" });
-                        res.end(`
-                            <!DOCTYPE html>
-                            <html lang="es">
-                            <head>
-                                <meta charset="UTF-8">
-                                <title>Compra realizada</title>
-                                <link rel="stylesheet" href="/finalizar.css">
-                            </head>
-                            <body>
-                                <div class="mensaje-exito">
-                                    <h1>✅ Pedido realizado con éxito</h1>
-                                    <p>Gracias por tu compra.</p>
-                                    <a class="volver-tienda" href="/index.html">← Volver a la tienda</a>
-                                </div>
-                            </body>
-                            </html>
-                        `);
+                        res.end(`<html><body><h1>✅ Pedido realizado</h1><a href="/index.html">Volver a la tienda</a></body></html>`);
                     }
                 });
             } else {
@@ -202,33 +147,32 @@ const server = http.createServer((req, res) => {
                 res.end("<h2>Error al acceder a la base de datos.</h2>");
             }
         });
+    }
 
-    } else {
-        // Archivos estáticos
+    // Página principal (con usuario)
+    else {
         let filePath = '.' + parsedUrl.pathname;
-        if (filePath === './index.html') {
+        if (filePath === './' || filePath === './index.html') {
             const cookies = leerCookies(req.headers.cookie);
             const username = cookies.user;
-        
-            const mensajeUsuario = username 
+            const mensajeUsuario = username
                 ? `<div id="usuarioInfo">👤 Conectado como: <strong>${username}</strong></div>`
                 : `<div id="usuarioInfo"><a href="/login" style="color: yellow;">🔐 Iniciar sesión</a></div>`;
 
             fs.readFile('./index.html', 'utf8', (err, contenido) => {
                 if (err) {
                     res.writeHead(500, { 'Content-Type': 'text/html' });
-                    res.end('<h1>Error al cargar la tienda</h1>');
+                    res.end('<h1>Error al cargar index.html</h1>');
                 } else {
                     const contenidoPersonalizado = contenido.replace('<!--LOGIN_PLACEHOLDER-->', mensajeUsuario);
                     res.writeHead(200, { 'Content-Type': 'text/html' });
                     res.end(contenidoPersonalizado, 'utf-8');
                 }
             });
-        
             return;
         }
-        
 
+        // Archivos estáticos
         const extname = path.extname(filePath).toLowerCase();
         const contentType = {
             '.html': 'text/html',
@@ -236,8 +180,8 @@ const server = http.createServer((req, res) => {
             '.js': 'text/javascript',
             '.jpg': 'image/jpeg',
             '.jpeg': 'image/jpeg',
-            '.png': 'image/png', 
-            '.gif': 'image/gif', 
+            '.png': 'image/png',
+            '.gif': 'image/gif',
             '.webp': 'image/webp',
         }[extname] || 'application/octet-stream';
 

@@ -16,54 +16,35 @@
             <a href="index.html" class="volver-tienda">Volver a la tienda</a>
         </form>
         <p id="errorMensaje" style="color: red; display: none;"></p>
-        <p id="mensajeExito" style="color: green; display: none;"></p>
     </div>
 
     <script>
-        // Verificar si ya hay sesión activa
-        fetch("http://localhost:8001/login", { credentials: 'include' })
-            .then(res => {
-                if (res.headers.get("Content-Type")?.includes("text/html")) {
-                    return res.text().then(html => {
-                        document.body.innerHTML = html;
-                        throw new Error("Ya logeado");
-                    });
-                }
-                return res.json();
-            })
-            .catch(error => {
-                if (error.message !== "Ya logeado") {
-                    console.error('Error comprobando sesión:', error);
-                }
-            });
-
-        // Manejador del formulario
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
-    
-            fetch(`http://localhost:8001/login?username=${encodeURIComponent(username)}`, { credentials: 'include' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        localStorage.setItem('usuario', JSON.stringify(data.usuario));
-                        document.getElementById('loginForm').style.display = 'none';
-                        document.getElementById('mensajeExito').textContent = `✅ Bienvenido, ${data.usuario.nombre_real}!`;
-                        document.getElementById('mensajeExito').style.display = 'block';
 
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 2000);
-                    } else {
-                        document.getElementById('errorMensaje').textContent = data.error;
-                        document.getElementById('errorMensaje').style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    document.getElementById('errorMensaje').textContent = 'Error al iniciar sesión';
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `username=${encodeURIComponent(username)}`,
+                credentials: 'include' // 🔥 Necesario para que funcione con cookies
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/index.html'; // ✅ Redirige solo si login OK
+                } else {
+                    document.getElementById('errorMensaje').textContent = data.error;
                     document.getElementById('errorMensaje').style.display = 'block';
-                    console.error('Error:', error);
-                });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('errorMensaje').textContent = 'Error al iniciar sesión';
+                document.getElementById('errorMensaje').style.display = 'block';
+            });
         });
     </script> 
 </body>

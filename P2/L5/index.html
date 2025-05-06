@@ -31,7 +31,7 @@
             <a href="productos/creatina.html">
                 <img src="imagenes/creatina.webp" alt="Creatina monohidrato">
             </a>
-            <h2>Creatina monohidrato Kojak 🍒⚡</h2>
+            <h2>Creatina Monohidrato Kojak 🍒⚡</h2>
             <p>Precio: 25.00 €</p>
             <p id="stock-creatina">Stock: <span>100</span></p>
             <button onclick="añadir_al_carrito('Creatina Monohidrato Kojak', 25.00, 'stock-creatina')">Añadir al carrito</button>
@@ -49,7 +49,7 @@
     </div>
 
     <script>
-        function añadir_al_carrito(nombre, precio) {
+        function añadir_al_carrito(nombre, precio, stockId) {
             fetch(`/anadir-carrito?nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}`, {
                 method: 'GET',
                 credentials: 'include'
@@ -58,8 +58,23 @@
             .then(data => {
                 if (data.success) {
                     alert(`✅ ${data.mensaje}`);
+
+                    // Actualizar visualmente el stock
+                    const stockSpan = document.querySelector(`#${stockId} span`);
+                    if (stockSpan) {
+                        let actual = parseInt(stockSpan.textContent);
+                        if (!isNaN(actual) && actual > 0) {
+                            const nuevoStock = actual - 1;
+                            stockSpan.textContent = nuevoStock;
+
+                            // Guardar en localStorage
+                            const stockGuardado = JSON.parse(localStorage.getItem("stockVisual")) || {};
+                            stockGuardado[stockId] = nuevoStock;
+                            localStorage.setItem("stockVisual", JSON.stringify(stockGuardado));
+                        }
+                    }
                 } else {
-                    alert('❌ No se pudo añadir al carrito.');
+                    alert('❌ ' + (data.error || 'No se pudo añadir al carrito.'));
                 }
             })
             .catch(err => {
@@ -67,6 +82,18 @@
                 alert('❌ Error al añadir al carrito.');
             });
         }
+
+        // Restaurar stock visual desde localStorage al cargar
+        window.addEventListener('DOMContentLoaded', () => {
+            const stockGuardado = JSON.parse(localStorage.getItem("stockVisual")) || {};
+            for (let stockId in stockGuardado) {
+                const span = document.querySelector(`#${stockId} span`);
+                if (span) {
+                    span.textContent = stockGuardado[stockId];
+                }
+            }
+        });
     </script>
+    
 </body>
 </html>

@@ -59,7 +59,12 @@
                 if (data.success) {
                     alert(`✅ ${data.mensaje}`);
 
-                    // Actualizar visualmente el stock
+                    // ✅ Añadir también al localStorage para mostrar en carrito.html
+                    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+                    carrito.push({ nombre, precio });
+                    localStorage.setItem("carrito", JSON.stringify(carrito));
+
+                    // ✅ Actualizar visualmente el stock
                     const stockSpan = document.querySelector(`#${stockId} span`);
                     if (stockSpan) {
                         let actual = parseInt(stockSpan.textContent);
@@ -101,6 +106,7 @@
                 }
             }
         });
+
 
     </script>
     

@@ -121,24 +121,51 @@ if (req.method === 'GET' && parsedUrl.pathname === '/login') {
         const nombre = query.nombre;
         const precio = parseFloat(query.precio);
         const cookies = leerCookies(req.headers.cookie);
-
+    
         let carrito = [];
         if (cookies.carrito) {
             try {
                 carrito = JSON.parse(cookies.carrito);
-            } catch (e) {
+            } catch {
                 carrito = [];
             }
         }
-
-        carrito.push({ nombre, precio });
-
-        res.writeHead(200, {
-            'Set-Cookie': `carrito=${encodeURIComponent(JSON.stringify(carrito))}; Path=/; Max-Age=3600`,
-            'Content-Type': 'application/json'
+    
+        leerBaseDatos(data => {
+            if (!data) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: 'Error al leer la base de datos' }));
+                return;
+            }
+    
+            const producto = data.productos.find(p => p.nombre === nombre);
+            if (!producto || producto.stock <= 0) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: 'Producto sin stock' }));
+                return;
+            }
+    
+            // Reducimos el stock en la base de datos
+            producto.stock--;
+    
+            carrito.push({ nombre, precio });
+    
+            // Guardamos nuevo carrito y BD
+            fs.writeFile(DATA_FILE, JSON.stringify(data, null, 4), err => {
+                if (err) {
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: 'Error al guardar BD' }));
+                } else {
+                    res.writeHead(200, {
+                        'Set-Cookie': `carrito=${encodeURIComponent(JSON.stringify(carrito))}; Path=/; Max-Age=3600`,
+                        'Content-Type': 'application/json'
+                    });
+                    res.end(JSON.stringify({ success: true, mensaje: 'Producto añadido al carrito' }));
+                }
+            });
         });
-        res.end(JSON.stringify({ success: true, mensaje: 'Producto añadido al carrito' }));
     }
+    
 
     // Finalizar compra
     else if (parsedUrl.pathname === '/finalizar-compra') {

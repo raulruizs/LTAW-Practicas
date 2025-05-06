@@ -183,9 +183,28 @@ const server = http.createServer((req, res) => {
     } else {
         // Archivos estáticos
         let filePath = '.' + parsedUrl.pathname;
-        if (filePath === './') {
-            filePath = './index.html';
+        if (filePath === './index.html') {
+            const cookies = leerCookies(req.headers.cookie);
+            const username = cookies.user;
+        
+            const mensajeUsuario = username 
+                ? `<p>👤 Conectado como: <strong>${username}</strong></p>`
+                : `<a href="/login">🔐 Iniciar sesión</a>`;
+        
+            fs.readFile('./index.html', 'utf8', (err, contenido) => {
+                if (err) {
+                    res.writeHead(500, { 'Content-Type': 'text/html' });
+                    res.end('<h1>Error al cargar la tienda</h1>');
+                } else {
+                    const contenidoPersonalizado = contenido.replace('<!--LOGIN_PLACEHOLDER-->', mensajeUsuario);
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    res.end(contenidoPersonalizado, 'utf-8');
+                }
+            });
+        
+            return;
         }
+        
 
         const extname = path.extname(filePath).toLowerCase();
         const contentType = {

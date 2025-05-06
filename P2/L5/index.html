@@ -5,19 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nodelift - Tienda de Suplementación Deportiva</title>
     <link rel="stylesheet" href="index.css">
-    <a href="finalizar_compra.html"><button>🛒 Finalizar compra</button></a>
-    
 </head>
 <body>
     <header class="encabezado">
         <h1 class="titulo-tienda">💪 NodeLift 💪</h1>
         <h2 class="subtitulo">-- Tienda de Suplementación Deportiva --</h2>
-        
     </header>
     
-        <!--LOGIN_PLACEHOLDER-->
-    </div>
-    
+    <!--LOGIN_PLACEHOLDER-->
+
     <div class="productos"> 
         <div class="producto">
             <a href="productos/proteina.html">
@@ -27,7 +23,7 @@
             <p>Precio: 30.00 €</p>
             <button onclick="añadir_al_carrito('Proteína Whey Cacaolat', 30.00)">Añadir al carrito</button>
         </div>
-    
+
         <div class="producto">
             <a href="productos/creatina.html">
                 <img src="imagenes/creatina.webp" alt="Creatina monohidrato">
@@ -36,7 +32,7 @@
             <p>Precio: 25.00 €</p>
             <button onclick="añadir_al_carrito('Creatina monohidrato Kojak', 25.00)">Añadir al carrito</button>
         </div>
-    
+
         <div class="producto">
             <a href="productos/alimentacion.html">
                 <img src="imagenes/alimentacion.jpg" alt="Alimentación saludable 🍽️">
@@ -46,25 +42,26 @@
             <button onclick="añadir_al_carrito('Alimentación saludable', 7.50)">Añadir al carrito</button>
         </div>
     </div>
-    
-    
+
     <script>
-        const usuario = localStorage.getItem('usuario');
         function añadir_al_carrito(nombre, precio) {
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    carrito.push({ nombre, precio });
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-
-    const usuario = localStorage.getItem("usuario");
-    if (usuario) {
-        const datos = JSON.parse(usuario);
-        alert(`Producto añadido al carrito por ${datos.nombre_real} 🛒`);
-    } else {
-        alert("Producto añadido al carrito 🛒");
-    }
-
-    }
+            fetch(`/anadir-carrito?nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}`, {
+                method: 'GET',
+                credentials: 'include' // importante para que se guarde la cookie
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`✅ ${data.mensaje}`);
+                } else {
+                    alert('❌ No se pudo añadir al carrito.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('❌ Error al añadir al carrito.');
+            });
+        }
     </script>
-
 </body>
 </html>

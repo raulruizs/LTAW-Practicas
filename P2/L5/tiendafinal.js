@@ -134,7 +134,7 @@ const server = http.createServer((req, res) => {
                 }
             });
         });
-    } else if (req.method === 'GET' && parsedUrl.pathname === '/añadir-carrito') {
+    } else if (req.method === 'GET' && parsedUrl.pathname === '/anadir-carrito') {
         const query = querystring.parse(parsedUrl.query);
         const nombre = query.nombre;
         const precio = parseFloat(query.precio);

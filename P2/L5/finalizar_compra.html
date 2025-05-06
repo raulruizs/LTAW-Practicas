@@ -28,18 +28,45 @@
     </div>
     
     <script>
-        function leerCookie(nombre) {
-            const cookies = document.cookie.split(';');
-            for (let c of cookies) {
-                const [key, val] = c.trim().split('=');
-                if (key === nombre) return decodeURIComponent(val);
+        document.querySelector("form").addEventListener("submit", function(e) {
+            e.preventDefault(); // Evita que recargue la página
+    
+            const direccion = document.getElementById("direccion").value;
+            const tarjeta = document.getElementById("tarjeta").value;
+    
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    
+            if (carrito.length === 0) {
+                alert("🛒 El carrito está vacío. Añade productos antes de comprar.");
+                return;
             }
-            return null;
-        }
     
-        const carritoCookie = leerCookie("carrito");
-        const carrito = carritoCookie ? JSON.parse(carritoCookie) : [];
+            // Llamada GET al servidor
+            const params = new URLSearchParams({
+                direccion,
+                tarjeta
+            });
     
+            fetch(`/finalizar-compra?${params.toString()}`, {
+                method: "GET",
+                credentials: "include"
+            })
+            .then(res => res.text())
+            .then(() => {
+                // Limpiar carrito y stock visual
+                localStorage.removeItem("carrito");
+                localStorage.removeItem("stockVisual");
+    
+                // Mostrar mensaje
+                document.getElementById("mensajeExito").style.display = "block";
+            })
+            .catch(() => {
+                alert("❌ Error al procesar la compra.");
+            });
+        });
+    
+        // Mostrar resumen del carrito
+        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
         const contenedor = document.getElementById("carritoResumen");
     
         if (carrito.length === 0) {
@@ -57,6 +84,7 @@
             contenedor.innerHTML = html;
         }
     </script>
+    
     
 </body>
 </html>

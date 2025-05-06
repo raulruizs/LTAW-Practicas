@@ -1,4 +1,29 @@
 /* General */
+.encabezado {
+    padding: 30px 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-bottom: 4px solid orange;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px rgba(255, 165, 0, 0.6);
+}
+
+.titulo-tienda {
+    font-size: 3em;
+    color: orange;
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    margin: 0;
+    text-shadow: 2px 2px 8px black;
+}
+
+.subtitulo {
+    font-size: 1.5em;
+    color: white;
+    font-weight: 300;
+    margin-top: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-shadow: 1px 1px 6px black;
+}
+
 body {
     font-family: 'Indie Flower', sans-serif;
     background: url('./productos/fondo3.webp') no-repeat center center fixed;

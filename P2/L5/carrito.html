@@ -47,18 +47,10 @@
         }
 
         function vaciarCarrito() {
-            // Borrar cookie del carrito
-            document.cookie = "carrito=; Path=/; Max-Age=0";
-
-            // Borrar stock visual
-            localStorage.removeItem("stockVisual");
-
-            // Refrescar la vista del carrito
-            mostrarCarrito();
-        }
-
-
-        mostrarCarrito();
+    document.cookie = "carrito=; Path=/; Max-Age=0";
+    localStorage.removeItem("stockVisual");
+    mostrarCarrito();
+}
     </script>
 </body>
 </html>

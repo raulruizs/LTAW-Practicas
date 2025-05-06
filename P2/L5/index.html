@@ -83,16 +83,25 @@
             });
         }
 
-        // Restaurar stock visual desde localStorage al cargar
+        // Restaurar stock visual desde localStorage o poner valores por defecto
         window.addEventListener('DOMContentLoaded', () => {
+            const stockInicial = {
+                'stock-proteina': 100,
+                'stock-creatina': 100,
+                'stock-tarta': 10
+            };
+
             const stockGuardado = JSON.parse(localStorage.getItem("stockVisual")) || {};
-            for (let stockId in stockGuardado) {
+
+            for (let stockId in stockInicial) {
                 const span = document.querySelector(`#${stockId} span`);
+                const valor = stockGuardado[stockId] ?? stockInicial[stockId]; // usa guardado o valor por defecto
                 if (span) {
-                    span.textContent = stockGuardado[stockId];
+                    span.textContent = valor;
                 }
             }
         });
+
     </script>
     
 </body>

@@ -54,17 +54,37 @@ const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url);
 
     // Página de login
-    if (req.method === 'GET' && parsedUrl.pathname === '/login') {
-        const cookies = leerCookies(req.headers.cookie);
-        if (cookies.user) {
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(`<html><body><h1>Hola, ${cookies.user}, ya estás logeado.</h1><a href="/index.html">Volver</a></body></html>`);
-            return;
-        }
+    // Página de login
+if (req.method === 'GET' && parsedUrl.pathname === '/login') {
+    const cookies = leerCookies(req.headers.cookie);
 
+    if (cookies.user) {
         res.writeHead(200, { 'Content-Type': 'text/html' });
-        leerArchivo('./login.html', 'text/html', res);
+        res.end(`
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <title>Ya estás logeado</title>
+                <link rel="stylesheet" href="/login.css">
+            </head>
+            <body>
+                <div class="login-container">
+                    <h1>🔒 Ya has iniciado sesión</h1>
+                    <p>Hola, ${cookies.user}.</p>
+                    <a href="/index.html" class="volver-tienda">Ir a la tienda</a>
+                </div>
+            </body>
+            </html>
+        `);
+        return;
     }
+
+    // Si NO está logueado, solo leemos el archivo, sin volver a escribir cabecera
+    leerArchivo('./login.html', 'text/html', res);
+    return; // <- IMPORTANTE
+}
+
 
     // Procesar login
     else if (req.method === 'POST' && parsedUrl.pathname === '/login') {

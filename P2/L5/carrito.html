@@ -26,31 +26,49 @@
             }
             return null;
         }
-
+    
         function mostrarCarrito() {
-            const carritoCookie = leerCookie("carrito");
-            const carrito = carritoCookie ? JSON.parse(carritoCookie) : [];
-
+            // Primero intentamos leer de localStorage
+            let carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
+    
+            // Si está vacío, intentamos desde la cookie como respaldo
+            if (carrito.length === 0) {
+                const cookieData = leerCookie("carrito");
+                if (cookieData) {
+                    try {
+                        carrito = JSON.parse(cookieData);
+                    } catch (e) {
+                        console.error("Error leyendo carrito desde cookie:", e);
+                        carrito = [];
+                    }
+                }
+            }
+    
             const carritoDiv = document.getElementById("carrito");
-
+    
             if (carrito.length === 0) {
                 carritoDiv.innerHTML = "<p>El carrito está vacío.</p>";
                 return;
             }
-
+    
             carritoDiv.innerHTML = carrito.map((producto, index) => 
-                `<p>${producto.nombre} - ${producto.precio} €</p>`
+                `<p>${producto.nombre} - ${producto.precio.toFixed(2)} €</p>`
             ).join("");
-
+    
             const total = carrito.reduce((sum, p) => sum + p.precio, 0);
             carritoDiv.innerHTML += `<h3>Total: ${total.toFixed(2)} €</h3>`;
         }
-
+    
         function vaciarCarrito() {
-    document.cookie = "carrito=; Path=/; Max-Age=0";
-    localStorage.removeItem("stockVisual");
-    mostrarCarrito();
-}
+            document.cookie = "carrito=; Path=/; Max-Age=0";
+            localStorage.removeItem("carrito");
+            localStorage.removeItem("stockVisual");
+            mostrarCarrito();
+        }
+    
+        // Mostrar el carrito al cargar la página
+        window.addEventListener('DOMContentLoaded', mostrarCarrito);
     </script>
+    
 </body>
 </html>

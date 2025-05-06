@@ -14,7 +14,7 @@
         <a href="finalizar_compra.html"><button>✅ Finalizar compra</button></a>
     </header>
     <div class="busqueda">
-        <input type="text" id="caja" placeholder="Escribe un producto...">
+        <input type="text" id="caja" placeholder="Buscar...">
         <div id="display1"></div>
     </div>
     
@@ -112,6 +112,31 @@
         });
 
 
+    </script>
+    <script>
+        const display1 = document.getElementById("display1");
+        const caja = document.getElementById("caja");
+    
+        caja.oninput = () => {
+            if (caja.value.length >= 3) {
+                const m = new XMLHttpRequest();
+                m.onreadystatechange = () => {
+                    if (m.readyState === 4 && m.status === 200) {
+                        const productos = JSON.parse(m.responseText);
+                        display1.innerHTML = "";
+    
+                        for (let i = 0; i < productos.length; i++) {
+                            display1.innerHTML += `<p>${productos[i]}</p>`;
+                        }
+                    }
+                };
+    
+                m.open("GET", `/buscar-productos?param1=${encodeURIComponent(caja.value)}`, true);
+                m.send();
+            } else {
+                display1.innerHTML = "";
+            }
+        };
     </script>
     
 </body>

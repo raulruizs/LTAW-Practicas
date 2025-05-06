@@ -155,6 +155,25 @@ if (req.method === 'GET' && parsedUrl.pathname === '/login') {
             res.end(JSON.stringify({ success: true, mensaje: 'Producto añadido al carrito' }));
         });
     }
+    else if (parsedUrl.pathname === '/buscar-productos') {
+        const myURL = new URL(req.url, 'http://' + req.headers['host']);
+        const param1 = myURL.searchParams.get('param1').toLowerCase();
+    
+        leerBaseDatos(data => {
+            if (!data || !data.productos) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify([]));
+                return;
+            }
+    
+            const resultados = data.productos
+                .map(p => p.nombre)
+                .filter(nombre => nombre.toLowerCase().startsWith(param1));
+    
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(resultados));
+        });
+    }
     
     
 

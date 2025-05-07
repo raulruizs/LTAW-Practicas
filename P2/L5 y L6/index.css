@@ -33,6 +33,13 @@
     display: inline-block;
 }
 
+.centro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 #display1 {
     color: white;
     border: 1px solid yellow
@@ -40,7 +47,8 @@
     text-align: center;
     margin-top: 5px;
     border-radius: 4px;
-    box-shadow: 0px 0px 6px whitesmoke
+    box-shadow: 0px 0px 6px whitesmoke;
+
 }
 
 

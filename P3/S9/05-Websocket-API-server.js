@@ -1,3 +1,10 @@
+const express = require('express');
+const http = require('http');
+const { WebSocketServer } = require('ws');
+
+const PUERTO = 8080; 
+
+
 //-- Crear una aplicación web vacia
 const app = express();
 

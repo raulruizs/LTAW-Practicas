@@ -13,6 +13,12 @@ const server = http.Server(app);
 
 //-- Crear el servidor de websockets, asociado al servidor http
 const wsServer = new WebSocketServer({server});
+const path = require('path');
+
+// Sirve test.html cuando se accede a /
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'test.html'));
+});
 
 //-- Lanzar el servidor HTTP
 //-- ¡Que empiecen los juegos de los WebSockets!

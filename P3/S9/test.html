@@ -1,29 +1,11 @@
-<!-- test.html -->
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>WebSocket Test</title>
+  <title>Test</title>
 </head>
 <body>
-  <h1>Cliente WebSocket</h1>
-  <div id="mensajes"></div>
-  <script>
-    const socket = new WebSocket('ws://localhost:8080');
-
-    socket.onopen = () => {
-      console.log('Conectado al servidor WebSocket');
-      socket.send('Hola desde el navegador');
-    };
-
-    socket.onmessage = event => {
-      const div = document.getElementById('mensajes');
-      div.innerHTML += `<p>Mensaje del servidor: ${event.data}</p>`;
-    };
-
-    socket.onclose = () => {
-      console.log('Conexión cerrada');
-    };
-  </script>
+  <p>Bienvenido a mi aplicación Web!!!</p>
+  <a href="#">Test</a>
 </body>
 </html>

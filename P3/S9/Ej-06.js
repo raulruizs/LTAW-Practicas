@@ -1,31 +1,30 @@
-//-- Elementos del interfaz
-const button = document.getElementById("button");
-const display = document.getElementById("display");
+const express = require('express');
+const http = require('http');
+const path = require('path');
+const { WebSocketServer } = require('ws');
 
-//-- Crear el Websocket
-const websocket = new WebSocket("ws://localhost:8080");
+const PUERTO = 8080;
+const app = express();
 
-let contador = 1;
+// Sirve automáticamente archivos de la carpeta 'public'
+app.use(express.static('public'));
 
-//-- Enviar mensaje inicial al establecerse la conexión
-websocket.onopen = () => {
-    console.log("Conexión establecida!")
+const server = http.createServer(app);
+const wsServer = new WebSocketServer({ server });
 
-    //-- Enviar mensaje inicial
-    websocket.send("Mensaje inicial del Cliente!!!");
-}
+wsServer.on('connection', socket => {
+  console.log("Cliente WebSocket conectado");
 
-websocket.onclose = () => {
-    console.log("Conexión cerrada!");
-}
+  socket.on('message', message => {
+    console.log("Mensaje recibido:", message.toString());
+    socket.send("Eco: " + message);
+  });
 
-//-- Mensaje recibido!
-websocket.onmessage = (e) => {
-  display.innerHTML += '<p style="color: blue">' + e.data + '</p>';
-}
+  socket.on('close', () => {
+    console.log("Cliente desconectado");
+  });
+});
 
-//-- Al apretar el botón se envía un mensaje al servidor
-button.onclick = () => {
-  websocket.send("Holiii-" + contador);
-  contador += 1;
-}
+server.listen(PUERTO, () => {
+  console.log("Escuchando en puerto:", PUERTO);
+});

@@ -12,7 +12,7 @@ const app = express();
 const server = http.Server(app);
 
 //-- Crear el servidor de websockets, asociado al servidor http
-const wsServer = new WebSocketServer({httpServer: server});
+const wsServer = new WebSocketServer({server});
 
 //-- Lanzar el servidor HTTP
 //-- ¡Que empiecen los juegos de los WebSockets!

@@ -1,37 +1,29 @@
+
+//-- Elementos del interfaz
+const display = document.getElementById("display");
+const msg_entry = document.getElementById("msg_entry");
+const usernameInput = document.getElementById("username");
+
+//-- Crear un websocket. Se establece la conexión con el servidor
 const socket = io();
 
-const chatForm = document.getElementById('chat-form');
-const messageInput = document.getElementById('message-input');
-const messagesContainer = document.getElementById('messages-container');
 
-// Mostrar el mensaje en el chat
-function showMessage(message) {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message');
-    messageElement.innerHTML = `
-        <div class="sender">${message.sender}</div>
-        <div class="content">${message.content}</div>
-    `;
-    messagesContainer.appendChild(messageElement);
-}
+socket.on("message", (msg)=>{
+  display.innerHTML += '<p style="color:blue">' + msg + '</p>';
+});
 
-// Enviar el mensaje al servidor cuando se envíe el formulario
-chatForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const message = messageInput.value;
-    if (message.trim() !== '') {
-        socket.emit('message', { sender: username, content: message });
-        messageInput.value = '';
+//-- Al apretar el botón se envía un mensaje al servidor
+msg_entry.onchange = () => {
+  if (msg_entry.value) {
+    const message = msg_entry.value.trim();
+    const username = usernameInput.value.trim();
+    if (username && message) {
+      socket.send(username + ": " + message); // Envía nombre de usuario junto con el mensaje
+    } else {
+      alert("Por favor, introduce tu nombre de usuario y un mensaje válido.");
     }
-});
-
-// Escuchar mensajes del servidor y mostrarlos en el chat
-socket.on('message', (message) => {
-    showMessage(message);
-});
-
-// Capturar el nombre del usuario al conectarse al chat
-const username = prompt('Ingresa tu nombre');
-if (username) {
-    socket.emit('username', username);
+  }
+  
+  //-- Borrar el mensaje actual
+  msg_entry.value = "";
 }

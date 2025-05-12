@@ -1,83 +1,64 @@
-const express = require('express');
+//-- Cargar las dependencias
+const socketServer = require('socket.io').Server;
 const http = require('http');
-const socketIO = require('socket.io');
-const path = require('path'); 
+const express = require('express');
+const colors = require('colors');
+const PUERTO = 8080;
+const Fecha = new Date();
 
+//-- Crear una nueva aplciacion web
 const app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
 
-const PORT = process.env.PORT || 3000;
+//-- Crear un servidor, asosiaco a la App de express
+const server = http.Server(app);
 
+//-- Crear el servidor de websockets, asociado al servidor http
+const io = new socketServer(server);
 
-const publicPath = path.join(__dirname, 'public');
-app.use(express.static(publicPath));
-
-// Ruta para enviar el archivo HTML al cliente
+//-- Definir el punto de entrada principal de mi aplicación web
 app.get('/', (req, res) => {
-    res.sendFile(path.join(publicPath, 'public.html'));
-});
-let contador = 0
-function aumentar() { contador += 1; };
-function disminuir() { contador -= 1; };
-// Evento de conexión de un cliente
-io.on('connection', (socket) => {
-    console.log('Nuevo usuario conectado');
-    aumentar();
-    // Mensaje de bienvenida al nuevo usuario
-    socket.emit('message', { sender: 'Servidor', content: 'Bienvenido al chat!' });
-
-    // Anunciar a los demás usuarios que alguien nuevo se ha conectado
-    socket.broadcast.emit('message', { sender: 'Servidor', content: '¡Un nuevo usuario se ha conectado!' });
-
-   
-    socket.on('message', (message) => {
-        console.log('Mensaje recibido: ', message);
-
-        // Verificar si el mensaje es un comando especial
-        if (message.content.startsWith('/')) {
-            handleCommand(message.content, socket);
-        } else {
-            // Reenviar el mensaje a todos los clientes
-            io.emit('message', message);
-        }
-    });
-
-    // Manejo de desconexión de un cliente
-    socket.on('disconnect', () => {
-        console.log('Usuario desconectado');
-        disminuir()
-    });
+    res.redirect("/chat.html");
 });
 
-// Función para manejar los comandos especiales
-function handleCommand(message, socket) {
-    switch (message) {
-        case '/help':
-            socket.emit('message', { sender: 'Servidor', content: 'Lista de comandos disponibles:' });
-            socket.emit('message', { sender: 'Servidor', content: '/help - Muestra esta lista de comandos' });
-            socket.emit('message', { sender: 'Servidor', content: '/list - Devuelve el número de usuarios conectados' });
-            socket.emit('message', { sender: 'Servidor', content: '/hello - El servidor devuelve un saludo' });
-            socket.emit('message', { sender: 'Servidor', content: '/date - Devuelve la fecha actual' });
-            break;
-        case '/list':
-            const numUsers = Object.keys(io.sockets.sockets).length;
-            socket.emit('message', { sender: 'Servidor', content: `Número de usuarios conectados: ${contador}` });
-            break;
-        case '/hello':
-            socket.emit('message', { sender: 'Servidor', content: 'Hola! ¿Cómo estás?' });
-            break;
-        case '/date':
-            const currentDate = new Date().toDateString();
-            socket.emit('message', { sender: 'Servidor', content: `Fecha actual: ${currentDate}` });
-            break;
-        default:
-            socket.emit('message', { sender: 'Servidor', content: 'Comando no reconocido. Para ver la lista de comandos, escriba /help' });
-            break;
+//-- Esto es necesario para que el servidor le envíe al cliente la
+//-- biblioteca socket.io para el cliente
+app.use('/', express.static(__dirname +'/'));
+
+//-- El directorio publico contiene ficheros estáticos
+app.use(express.static('public'));
+
+//------------------- GESTION SOCKETS IO
+//-- Evento: Nueva conexión recibida
+io.on('connect', (socket) => {
+
+    console.log('** NUEVA CONEXIÓN **'.yellow);
+    
+    //manda mensaje de bienvenida unicamente al usuario que se ha conectado
+    socket.emit("message", "¡Bienvenido al chat, escribe para comenzar!");
+    
+    //-- Evento de desconexión
+    socket.on('disconnect', function(){
+      console.log('** CONEXIÓN TERMINADA **'.yellow);
+    });  
+  
+    //-- Mensaje recibido, dependiendo de que se recibe se hace cada cosa
+    socket.on("message", (data)=> {
+      console.log("Mensaje Recibido!: " + data);
+    if (data.endsWith("/")){
+        socket.send("Esperando a recibir comando, si quiere consultar los comandos disponibles utilice: /help")
+    }else if (data.split("/")[1] == 'help') {
+        socket.send("Comandos Disponibles: /list, /hello, /date");
+    } else if(data.split("/")[1] == 'list') {
+        socket.send("Hay " + io.engine.clientsCount + " clientes conectados");
+    }else if(data.split("/")[1] == 'hello'){
+        socket.send('Hola! Bienvenido al chat!!')
+    }else if (data.split("/")[1] == 'date'){
+        socket.send("Fecha: " + Fecha.toLocaleDateString());
+    }else{
+        io.send(data);
     }
-}
+    });
+  });
 
-// Iniciar el servidor
-server.listen(PORT, () => {
-    console.log(`Servidor de chat iniciado en el puerto ${PORT}`);
-});
+server.listen(PUERTO);
+console.log("Escuchando en puerto: " + PUERTO);

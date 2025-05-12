@@ -23,7 +23,7 @@ msg_entry.onchange = () => {
       alert("Por favor, introduce tu nombre de usuario y un mensaje válido.");
     }
   }
-  
+   
   //-- Borrar el mensaje actual
   msg_entry.value = "";
 }

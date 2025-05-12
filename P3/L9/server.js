@@ -58,6 +58,10 @@ io.on('connect', (socket) => {
         io.send(data);
     }
     });
+    socket.on('typing', (nick) => {
+        socket.broadcast.emit('typing', nick);
+});
+
   });
 
 server.listen(PUERTO);

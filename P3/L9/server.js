@@ -33,8 +33,8 @@ io.on('connect', (socket) => {
 
     console.log('** NUEVA CONEXIÓN **'.yellow);
     
-    //manda mensaje de bienvenida unicamente al usuario que se ha conectado
-    socket.emit("message", "¡Bienvenido al chat, escribe para comenzar!");
+    //mando un mensaje de bienvenida unicamente al usuario que se ha conectado
+    socket.emit("message", "🔔 Un nuevo usuario se ha unido al chat");
     
     //-- Evento de desconexión
     socket.on('disconnect', function(){

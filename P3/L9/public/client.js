@@ -1,29 +1,47 @@
-
-//-- Elementos del interfaz
-const display = document.getElementById("display");
-const msg_entry = document.getElementById("msg_entry");
-const usernameInput = document.getElementById("username");
-
-//-- Crear un websocket. Se establece la conexión con el servidor
+// client.js
 const socket = io();
+const messagesDiv = document.getElementById('messages');
+const typingDiv   = document.getElementById('typing-indicator');
+const msgInput    = document.getElementById('msg_entry');
+const sendBtn     = document.getElementById('send-btn');
+const audio       = document.getElementById('msg-sound');
 
+const username = localStorage.getItem('username') || prompt('Tu nickname:');
+if (!localStorage.getItem('username')) {
+  localStorage.setItem('username', username);
+}
 
-socket.on("message", (msg)=>{
-  display.innerHTML += '<p style="color:blue">' + msg + '</p>';
+// Avisamos al servidor de nuestro nickname
+socket.emit('join', username);
+
+// Habilitar botón sólo si hay texto
+msgInput.addEventListener('input', () => {
+  sendBtn.disabled = !msgInput.value.trim();
+  socket.emit('typing', msgInput.value.trim() ? username : null);
 });
 
-//-- Al apretar el botón se envía un mensaje al servidor
-msg_entry.onchange = () => {
-  if (msg_entry.value) {
-    const message = msg_entry.value.trim();
-    const username = usernameInput.value.trim();
-    if (username && message) {
-      socket.send(username + ": " + message); // Envía nombre de usuario junto con el mensaje
-    } else {
-      alert("Por favor, introduce tu nombre de usuario y un mensaje válido.");
-    }
-  }
-   
-  //-- Borrar el mensaje actual
-  msg_entry.value = "";
-}
+// Enviar mensaje
+sendBtn.addEventListener('click', () => {
+  const text = msgInput.value.trim();
+  if (!text) return;
+  socket.emit('message', { from: username, text });
+  msgInput.value = '';
+  sendBtn.disabled = true;
+  socket.emit('typing', null);
+});
+
+// Recibir mensaje
+socket.on('message', ({ from, text }) => {
+  const div = document.createElement('div');
+  div.classList.add('message');
+  if (from === username) div.classList.add('self');
+  div.textContent = `${from}: ${text}`;
+  messagesDiv.append(div);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  if (from !== username) audio.play().catch(()=>{});
+});
+
+// Recibir typing
+socket.on('typing', (who) => {
+  typingDiv.textContent = who ? `${who} está escribiendo…` : '';
+});

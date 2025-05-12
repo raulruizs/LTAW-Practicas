@@ -89,7 +89,7 @@ body {
   align-self: flex-start;
 }
 
-/* Si quieres distinguir tus mensajes, añade la clase `self` en JS */
+
 #display p.self {
   background: #007bff;
   color: white;

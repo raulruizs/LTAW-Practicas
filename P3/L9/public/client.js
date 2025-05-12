@@ -1,27 +1,40 @@
-// al principio de client.js
+// client.js
+
+// 1) Referencias al DOM y audio
 const display = document.getElementById("display");
 const msg_entry = document.getElementById("msg_entry");
 const usernameInput = document.getElementById("username");
-
-// REFERENCIA AL AUDIO
+const typingIndicator = document.getElementById("typing-indicator");
 const msgSound = document.getElementById("msg-sound");
 
-// Conexión socket
+// 2) Conexión Socket.IO
 const socket = io();
 
-// Mostrar mensajes y sonar
+// 3) Indicador “escribiendo…”
+msg_entry.addEventListener('input', () => {
+  // Cada vez que el usuario escribe algo
+  const nick = localStorage.getItem('username');
+  socket.emit('typing', nick || null);
+});
+
+// 4) Escuchar eventos “typing” del servidor
+socket.on('typing', (who) => {
+  typingIndicator.textContent = who
+    ? `${who} está escribiendo…`
+    : '';
+});
+
+// 5) Recibir mensajes y reproducir sonido
 socket.on("message", (msg) => {
-  // Reproducir sonido (solo si viene de otro usuario)
-  // Opcionalmente podrías comprobar que msg no incluya tu propio nickname
   msgSound.currentTime = 0;
   msgSound.play().catch(() => {});
 
-  // Mostrar en pantalla
   display.innerHTML += '<p style="color:blue">' + msg + '</p>';
+  display.scrollTop = display.scrollHeight;
 });
 
-// resto de tu client.js igual...
-msg_entry.onchange = () => {
+// 6) Enviar mensaje al cambiar el campo (o con Enter)
+msg_entry.addEventListener('change', () => {
   if (msg_entry.value) {
     const message = msg_entry.value.trim();
     const username = usernameInput.value.trim();
@@ -32,4 +45,6 @@ msg_entry.onchange = () => {
     }
   }
   msg_entry.value = "";
-};
+  // Al enviar, avisamos que hemos dejado de escribir:
+  socket.emit('typing', null);
+});

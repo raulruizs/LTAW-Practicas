@@ -67,7 +67,99 @@ button[type="submit"]:hover {
 }
 
 .other-message {
-    align-self: flex-start;
+    align-self: flex-start;a/* style.css */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #f0f2f5;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#chat-app {
+  width: 100%;
+  max-width: 600px;
+  height: 80vh;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+header {
+  background: #007bff;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+main {
+  padding: 1rem;
+  overflow-y: auto;
+  position: relative;
+}
+
+#messages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.message {
+  padding: 0.6rem 1rem;
+  border-radius: 20px;
+  max-width: 75%;
+  word-wrap: break-word;
+  background: #e9ecef;
+  align-self: flex-start;
+}
+
+.message.self {
+  background: #007bff;
+  color: #fff;
+  align-self: flex-end;
+}
+
+#typing-indicator {
+  height: 1.2rem;
+  font-style: italic;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+footer {
+  display: flex;
+  padding: 0.8rem;
+  border-top: 1px solid #ddd;
+}
+
+#msg_entry {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+}
+
+#send-btn {
+  margin-left: 0.5rem;
+  padding: 0 1.2rem;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+#send-btn:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
     background-color: #f0f0f0;
     color: #333;
 }

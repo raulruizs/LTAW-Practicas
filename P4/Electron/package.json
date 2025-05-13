@@ -1,0 +1,19 @@
+{
+  "name": "chat_final",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "raulruizs",
+  "license": "ISC",
+  "description": "Mi última práctica de LTAW creando una aplicación con chat en vivo :)",
+  "dependencies": {
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "electron": "^36.2.0"
+  }
+}

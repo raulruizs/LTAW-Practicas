@@ -1,0 +1,112 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fondo degradado y centrar contenido */
+body {
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Login (antes de iniciar sesión) */
+#username_input {
+  background: #ffffffdd;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  text-align: center;
+}
+#username_input h4 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+#username_input input {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+#username_input button {
+  padding: 0.6rem 1.2rem;
+  background: #5151e5;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#username_input button:hover {
+  background: #3b3bbf;
+}
+
+/* Contenedor del chat (tras iniciar sesión) */
+#chat_container {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 600px;
+  height: 80vh;
+  background: #ffffffdd;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+/* Título */
+#chat_container h3 {
+  background: #5151e5;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Área de mensajes */
+#display {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Cada mensaje */
+#display p {
+  max-width: 75%;
+  padding: 0.6rem 1rem;
+  border-radius: 20px;
+  background: #e9ecef;
+  color: #333;
+  word-wrap: break-word;
+  align-self: flex-start;
+}
+
+
+#display p.self {
+  background: #007bff;
+  color: white;
+  align-self: flex-end;
+}
+
+/* Input de texto al pie */
+#msg_entry {
+  width: calc(100% - 2rem);
+  padding: 1rem;
+  border: none;
+  border-top: 1px solid #ddd;
+  outline: none;
+  font-size: 1rem;
+}
+
+/* Placeholder más suave */
+#msg_entry::placeholder {
+  color: #999;
+}

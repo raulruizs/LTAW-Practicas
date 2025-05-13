@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHAT</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Cargar la biblioteca Socket.IO. Nos la debe entregar el servidor -->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- Cliente que usa los Sockets.io-->
+  <script src="client.js" defer></script>
+</head>
+
+<body>
+  <div id="username_input">
+    <h4> Por favor, Introduzca un nombre de usuario para comenzar a chatear!</h2>
+    <input type="text" id="username">
+    <button onclick="nombreDeUsuario()"> Iniciar Sesion</button>
+  </div>
+  <div id="chat_container" style="display: none;">
+    <h3>Mensajes recibidos</h3>
+    <p id="display"></p>
+    <div id="typing-indicator" class="typing-indicator"></div> 
+    <input type="text" placeholder="Escribe aquí los mensajes..." autocomplete="off" id="msg_entry">
+  </div>
+  
+  <script>
+    function nombreDeUsuario() {
+      var usernameInput = document.getElementById("username");
+      var username = usernameInput.value.trim();
+
+      if (username !== "") {
+        document.getElementById("username_input").style.display = "none";
+        document.getElementById("chat_container").style.display = "block";
+        localStorage.setItem("username", username); 
+      } else {
+        alert("Por favor, introduce un nombre de usuario válido.");
+      }}
+    </script>
+    <audio id="msg-sound" src="notificacion.mp3" preload="auto"></audio>
+</body>
+
+</html>

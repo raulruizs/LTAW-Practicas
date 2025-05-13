@@ -29,12 +29,12 @@
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: `username=${encodeURIComponent(username)}`,
-                credentials: 'include' // 🔥 Necesario para que funcione con cookies
+                credentials: 'include' // Necesario para que funcione con cookies
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.href = '/index.html'; // ✅ Redirige solo si login OK
+                    window.location.href = '/index.html'; // Redirige solo si login OK
                 } else {
                     document.getElementById('errorMensaje').textContent = data.error;
                     document.getElementById('errorMensaje').style.display = 'block';

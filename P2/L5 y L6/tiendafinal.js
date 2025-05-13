@@ -54,7 +54,6 @@ const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url);
 
     // Página de login
-    // Página de login
 if (req.method === 'GET' && parsedUrl.pathname === '/login') {
     const cookies = leerCookies(req.headers.cookie);
 
@@ -82,7 +81,7 @@ if (req.method === 'GET' && parsedUrl.pathname === '/login') {
 
     // Si NO está logueado, solo leemos el archivo, sin volver a escribir cabecera
     leerArchivo('./login.html', 'text/html', res);
-    return; // <- IMPORTANTE
+    return;
 }
 
 
@@ -181,10 +180,10 @@ if (req.method === 'GET' && parsedUrl.pathname === '/login') {
     else if (parsedUrl.pathname === '/finalizar-compra') {
         const query = querystring.parse(parsedUrl.query);
         const nuevoPedido = {
-            usuario: "prueba",  // se puede mejorar más adelante
+            usuario: "prueba",
             direccion: query.direccion,
             tarjeta: query.tarjeta,
-            productos: []  // si se usa carrito real
+            productos: []
         };
 
         leerBaseDatos((data) => {

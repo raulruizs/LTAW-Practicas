@@ -31,7 +31,7 @@
             // Primero intentamos leer de localStorage
             let carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
     
-            // Si está vacío, intentamos desde la cookie como respaldo
+            // Si está vacío, intentamos desde la cookie como respaldo, me ayuda bastante
             if (carrito.length === 0) {
                 const cookieData = leerCookie("carrito");
                 if (cookieData) {

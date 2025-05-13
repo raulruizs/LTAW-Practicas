@@ -63,12 +63,12 @@
                 if (data.success) {
                     alert(`✅ ${data.mensaje}`);
 
-                    // ✅ Añadir también al localStorage para mostrar en carrito.html
+                    // Añadir también al localStorage para mostrar en carrito.html
                     const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
                     carrito.push({ nombre, precio });
                     localStorage.setItem("carrito", JSON.stringify(carrito));
 
-                    // ✅ Actualizar visualmente el stock
+                    // Actualizar visualmente el stock
                     const stockSpan = document.querySelector(`#${stockId} span`);
                     if (stockSpan) {
                         let actual = parseInt(stockSpan.textContent);
@@ -92,7 +92,7 @@
             });
         }
 
-        // Restaurar stock visual desde localStorage o poner valores por defecto
+        // Restaurar stock visualmente desde localStorage o poner valores por defecto, depende
         window.addEventListener('DOMContentLoaded', () => {
             const stockInicial = {
                 'stock-proteina': 100,
@@ -104,7 +104,7 @@
 
             for (let stockId in stockInicial) {
                 const span = document.querySelector(`#${stockId} span`);
-                const valor = stockGuardado[stockId] ?? stockInicial[stockId]; // usa guardado o valor por defecto
+                const valor = stockGuardado[stockId] ?? stockInicial[stockId];
                 if (span) {
                     span.textContent = valor;
                 }

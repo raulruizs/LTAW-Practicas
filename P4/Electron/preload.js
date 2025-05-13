@@ -1,8 +1,5 @@
-    // preload.js
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('api', {
-  onVersionInfo: (cb) => ipcRenderer.on('version-info', (_, info) => cb(info)),
-  onUserCount: (cb) => ipcRenderer.on('usuarios', (_, count) => cb(count)),
-  onMessage: (cb) => ipcRenderer.on('msg_client', (_, msg) => cb(msg)),
+contextBridge.exposeInMainWorld('electron', {
+    onVersionInfo: (callback) => ipcRenderer.on('version-info', (event, data) => callback(data))
 });

@@ -6,6 +6,10 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById("v-electron").textContent = info.electron;
     document.getElementById("url-cliente").textContent = info.url;
     document.getElementById("url-cliente").href = info.url;
+    document.getElementById("btn-test").addEventListener("click", () => {
+        window.api.sendTestMessage("📢 Este es un mensaje de prueba desde el servidor");
+});
+
   });
 
   window.api.onUserCount((count) => {

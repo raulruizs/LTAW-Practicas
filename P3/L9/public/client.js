@@ -1,5 +1,3 @@
-// client.js
-
 // 1) Referencias al DOM y audio
 const display = document.getElementById("display");
 const msg_entry = document.getElementById("msg_entry");

@@ -1,4 +1,3 @@
-//-- Cargar las dependencias
 const socketServer = require('socket.io').Server;
 const http = require('http');
 const express = require('express');
@@ -9,7 +8,7 @@ const Fecha = new Date();
 //-- Crear una nueva aplciacion web
 const app = express();
 
-//-- Crear un servidor, asosiaco a la App de express
+//-- Crear un servidor, asociado a la App de express
 const server = http.Server(app);
 
 //-- Crear el servidor de websockets, asociado al servidor http
@@ -20,11 +19,9 @@ app.get('/', (req, res) => {
     res.redirect("/chat.html");
 });
 
-//-- Esto es necesario para que el servidor le envíe al cliente la
-//-- biblioteca socket.io para el cliente
 app.use('/', express.static(__dirname +'/'));
 
-//-- El directorio publico contiene ficheros estáticos
+//-- Ficheros estáticos
 app.use(express.static('public'));
 
 //------------------- GESTION SOCKETS IO

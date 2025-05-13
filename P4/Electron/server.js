@@ -10,7 +10,10 @@ const Fecha = new Date();
 
 let win = null; // se asignará desde main.js
 
-app.get('/', (req, res) => res.redirect("/chat.html"));
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+});
+
 app.use('/', express.static(__dirname +'/'));
 app.use(express.static('public'));
 

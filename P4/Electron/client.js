@@ -30,7 +30,7 @@ socket.on("message", (msg) => {
   const p = document.createElement("p");
   p.textContent = msg;
 
-  // Diferenciar mensaje propio
+  // Diferenciar mensaje propio del usuario
   const username = usernameInput.value.trim();
   if (msg.startsWith(username + ":")) {
     p.classList.add("self");

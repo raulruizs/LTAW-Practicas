@@ -8,7 +8,7 @@ const io = new socketServer(server);
 const PUERTO = 8080;
 const Fecha = new Date();
 
-let win = null; // se asignará desde main.js
+let win = null; // se asigna desde main.js
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/index.html");

@@ -1,4 +1,3 @@
-// renderer.js
 window.addEventListener('DOMContentLoaded', () => {
   window.api.onVersionInfo((info) => {
     document.getElementById("v-node").textContent = info.node;

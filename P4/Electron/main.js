@@ -22,6 +22,8 @@ function createWindow() {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false
     }
   });
 
@@ -32,7 +34,7 @@ function createWindow() {
       node: process.versions.node,
       chrome: process.versions.chrome,
       electron: process.versions.electron,
-      url: `http://${getLocalIP()}:${PORT}/chat.html`
+      url: `http://${getLocalIP()}:${PORT}/index.html`
     });
   });
 

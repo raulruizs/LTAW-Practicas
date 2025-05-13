@@ -21,7 +21,7 @@ function startServer(ventanaElectron) {
   win = ventanaElectron;
 
   io.on('connection', (socket) => {
-    console.log('** NUEVA CONEXIÓN **');
+    console.log('** NUEVA CONEXION **');
     socket.emit("message", "🔔 Un nuevo usuario se ha unido al chat");
 
     win.webContents.send("usuarios", io.engine.clientsCount);

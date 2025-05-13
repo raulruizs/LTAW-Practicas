@@ -2,7 +2,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const os = require('os');
-const { startServer, PORT } = require('./server');
+const { startServer, PORT, io } = require('./server');
 
 function getLocalIP() {
   const nets = os.networkInterfaces();
@@ -39,6 +39,11 @@ function createWindow() {
   });
 
   startServer(win); // arrancar el servidor pasando la ventana
+  ipcMain.handle('mensaje-prueba', (event, mensaje) => {
+    console.log("Mensaje de prueba enviado desde interfaz:", mensaje);
+    io.send(mensaje); // Se envía a todos los clientes conectados
+});
+
 }
 
 app.whenReady().then(createWindow);

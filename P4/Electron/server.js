@@ -61,5 +61,6 @@ function startServer(ventanaElectron) {
 
 module.exports = {
   startServer,
-  PORT: PUERTO
+  PORT: PUERTO,
+  io
 };

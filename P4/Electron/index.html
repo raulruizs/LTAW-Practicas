@@ -11,14 +11,28 @@
 
   <!-- Cliente que usa los Sockets.io-->
   <script src="client.js" defer></script>
+  <!-- Script del renderizador (nuestra parte Electron) -->
+  <script src="renderer.js" defer></script>
 </head>
 
 <body>
+  <!-- INFO EXTRA INYECTADA POR ELECTRON -->
+  <div id="info_server" style="background:#f1f1f1; padding:10px; border-bottom:1px solid #ccc;">
+    <h2>Información del Servidor</h2>
+    <p><strong>Versión de Node:</strong> <span id="v-node">...</span></p>
+    <p><strong>Versión de Chrome:</strong> <span id="v-chrome">...</span></p>
+    <p><strong>Versión de Electron:</strong> <span id="v-electron">...</span></p>
+    <p><strong>Usuarios conectados:</strong> <span id="usuarios">0</span></p>
+    <p><strong>URL cliente:</strong> <a href="#" id="url-cliente">–</a></p>
+  </div>
+
+  <!-- TU ESTRUCTURA ORIGINAL -->
   <div id="username_input">
-    <h4> Por favor, Introduzca un nombre de usuario para comenzar a chatear!</h2>
+    <h4> Por favor, Introduzca un nombre de usuario para comenzar a chatear!</h4>
     <input type="text" id="username">
     <button onclick="nombreDeUsuario()"> Iniciar Sesion</button>
   </div>
+
   <div id="chat_container" style="display: none;">
     <h3>Mensajes recibidos</h3>
     <p id="display"></p>
@@ -38,8 +52,8 @@
       } else {
         alert("Por favor, introduce un nombre de usuario válido.");
       }}
-    </script>
-    <audio id="msg-sound" src="notificacion.mp3" preload="auto"></audio>
-</body>
+  </script>
 
+  <audio id="msg-sound" src="notificacion.mp3" preload="auto"></audio>
+</body>
 </html>

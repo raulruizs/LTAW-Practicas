@@ -6,6 +6,8 @@ const msg_entry = document.getElementById("msg_entry");
 const usernameInput = document.getElementById("username");
 const typingIndicator = document.getElementById("typing-indicator");
 const msgSound = document.getElementById("msg-sound");
+const sendBtn = document.getElementById("send_btn");
+
 
 // 2) Conexión Socket.IO
 const socket = io();
@@ -31,6 +33,19 @@ socket.on("message", (msg) => {
 
   display.innerHTML += '<p style="color:blue">' + msg + '</p>';
   display.scrollTop = display.scrollHeight;
+});
+sendBtn.addEventListener('click', () => {
+  if (msg_entry.value) {
+    const message = msg_entry.value.trim();
+    const username = usernameInput.value.trim();
+    if (username && message) {
+      socket.send(username + ": " + message);
+    } else {
+      alert("Por favor, introduce tu nombre de usuario y un mensaje válido.");
+    }
+    msg_entry.value = "";
+    socket.emit('typing', null);
+  }
 });
 
 // 6) Enviar mensaje al cambiar el campo (o con Enter)

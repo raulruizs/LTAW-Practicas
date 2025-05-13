@@ -1,0 +1,18 @@
+# Ignorar todas las dependencias
+node_modules/
+P4/Electron/node_modules/
+
+# Archivos de Electron grandes
+**/electron/dist/
+
+# Archivos del sistema / temporales
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos temporales de VSCode
+.vscode/

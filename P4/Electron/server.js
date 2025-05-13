@@ -21,6 +21,8 @@ function startServer(ventanaElectron) {
     console.log('** NUEVA CONEXIÓN **');
     socket.emit("message", "🔔 Un nuevo usuario se ha unido al chat");
 
+    win.webContents.send("usuarios", io.engine.clientsCount);
+
     socket.on("message", (data) => {
       console.log("Mensaje Recibido!: " + data);
 
@@ -36,7 +38,6 @@ function startServer(ventanaElectron) {
         socket.send("Fecha: " + Fecha.toLocaleDateString());
       } else {
         io.send(data);
-        win.webContents.send("msg_client", data);
       }
     });
 

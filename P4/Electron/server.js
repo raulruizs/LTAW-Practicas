@@ -49,7 +49,7 @@ function startServer(ventanaElectron) {
     });
 
     socket.on('disconnect', () => {
-      console.log('** CONEXIÓN TERMINADA **');
+      console.log('** CONEXION TERMINADA **');
       win.webContents.send("usuarios", io.engine.clientsCount);
     });
   });

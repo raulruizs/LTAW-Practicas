@@ -110,3 +110,43 @@ body {
 #msg_entry::placeholder {
   color: #999;
 }
+
+/* Información del servidor (inyectada por Electron) */
+#info_server {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background: #ffffffdd;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 300px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+#info_server h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+  color: #222;
+}
+
+#info_server p {
+  margin-bottom: 0.4rem;
+  color: #333;
+}
+
+#info_server strong {
+  font-weight: bold;
+  color: #000;
+}
+
+#info_server a {
+  color: #007bff;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+#info_server a:hover {
+  text-decoration: underline;
+}
